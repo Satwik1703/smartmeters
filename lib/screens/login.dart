@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -12,57 +11,6 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  var _verificationId;
-  var firebaseOtp;
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  void verifyPhoneNumber() async{
-    PhoneVerificationCompleted verificationCompleted =
-      (PhoneAuthCredential phoneAuthCredential) async {
-        // await _auth.signInWithCredential(phoneAuthCredential);
-        // print("Phone number automatically verified and user signed in: ${_auth.currentUser.uid}");
-      };
-
-    PhoneVerificationFailed verificationFailed =
-      (FirebaseAuthException authException) {
-        print("Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}");
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${authException.code}. ${authException.message}'), duration: const Duration(seconds: 5),));
-      };
-
-    PhoneCodeSent codeSent =
-      (String verificationId, [int forceResendingToken]) async {
-        print('Please check your phone for the verification code.');
-        setState(() {
-          _verificationId = verificationId;
-        });
-      };
-
-    PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout =
-      (String verificationId) {
-        print("verification code: " + verificationId);
-        setState(() {
-          _verificationId = verificationId;
-        });
-      };
-
-    try {
-      await _auth.verifyPhoneNumber(
-        phoneNumber: '+91${Provider.of<Data>(context, listen: false).mobile_number}',
-        timeout: const Duration(seconds: 60),
-        verificationCompleted: verificationCompleted,
-        verificationFailed: verificationFailed,
-        codeSent: codeSent,
-        codeAutoRetrievalTimeout: codeAutoRetrievalTimeout);
-    }
-    catch (e) {
-      print("Failed to Verify Phone Number: $e");
-    }
-  }
 
   var otp_sent = false;
   var user = "Get OTP";
@@ -73,31 +21,6 @@ class _LoginState extends State<Login> {
     setState(() {
       verifyOtp = "Verifying...";
     });
-    //Firebase Auth---
-    try {
-      final AuthCredential credential = PhoneAuthProvider.credential(
-        verificationId: _verificationId,
-        smsCode: '$firebaseOtp',
-      );
-
-      final User user = (await _auth.signInWithCredential(credential)).user;
-      print("Successfully signed in UID: ${user.uid}");
-    }
-    catch (e) {
-      if(e.toString().contains('expired')){
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('OTP has expired. Please try again'), duration: const Duration(seconds: 3),));
-      }
-      else if(e.toString().contains('too-many')){
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Received Too many requests from this number. Please try later'), duration: const Duration(seconds: 3),));
-      }
-      print("Failed to sign in: " + e.toString());
-      setState(() {
-        verifyOtp = "Wrong OTP";
-      });
-      return;
-    }
-    //-----
-
     var res = await Provider.of<Data>(context, listen: false).validateOtp();
     if(res == "Error"){
       setState(() {
@@ -106,13 +29,16 @@ class _LoginState extends State<Login> {
       return;
     }
     if(res == "Success"){
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => HomeScreen()),
+      // );
       await  Provider.of<Data>(context, listen: false).getDashboardData();
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => HomeScreen()),
             (Route<dynamic> route) => false,
       );
-      print('OTP verified');
     }
 
   }
@@ -206,7 +132,7 @@ class _LoginState extends State<Login> {
             color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
-          length: 6,
+          length: 4,
           animationType: AnimationType.fade,
 
           pinTheme: PinTheme(
@@ -222,25 +148,24 @@ class _LoginState extends State<Login> {
           cursorColor: Colors.white,
           animationDuration: Duration(milliseconds: 100),
           enableActiveFill: false,
-          enablePinAutofill: true,
+          enablePinAutofill: false,
           keyboardType: TextInputType.number,
           autoFocus: true,
           onCompleted: (v) => validateOtp(),
           onSubmitted: (v) => validateOtp(),
           onChanged: (value) {
-            // Provider.of<Data>(context, listen: false).changeOtp(value);
+            Provider.of<Data>(context, listen: false).changeOtp(value);
             setState(() {
-              firebaseOtp = value;
               verifyOtp = "Verify";
             });
           },
           onTap: (){
-            // txt.value = TextEditingValue(
-            //   text: otp,
-            //   selection: TextSelection.fromPosition(
-            //     TextPosition(offset: otp.length),
-            //   ),
-            // );
+            txt.value = TextEditingValue(
+              text: otp,
+              selection: TextSelection.fromPosition(
+                TextPosition(offset: otp.length),
+              ),
+            );
           },
           beforeTextPaste: (text) {
             return false;
@@ -333,16 +258,13 @@ class _LoginState extends State<Login> {
                         });
                         return;
                       }
-
-                      verifyPhoneNumber();
-
                       setState(() {
                         otp_sent = true;
                       });
-                      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('OTP is $res'), duration: const Duration(seconds: 5),));
-                      // setState(() {
-                      //   otp = res;
-                      // });
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('OTP is $res'), duration: const Duration(seconds: 5),));
+                      setState(() {
+                        otp = res;
+                      });
                     }
                     else{
                       setState(() {

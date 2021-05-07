@@ -65,7 +65,6 @@ class Utilities extends StatelessWidget {
         Maintenance(
             icon: 'maintenance.svg',
             cost: Provider.of<Data>(context).dashboardData['meterdata']['Maintenance'],
-            data: Provider.of<Data>(context).dashboardData['meterdata'],
         ),
       ],
     );
@@ -111,13 +110,11 @@ class _UtilityState extends State<Utility> {
       var b = widget.updateTime.toString().substring(widget.updateTime.toString().length -3);
       DateTime dateParsed = new DateFormat("dd-MM-yyyy h:mm:ss").parse(a);
       var c = (dateParsed.minute.toString().length < 2) ? '0${dateParsed.minute}' : dateParsed.minute;
-      var d = (dateParsed.hour.toString() == '0' || dateParsed.hour.toString() == '00') ? '12' : dateParsed.hour;
-      updTime = '${(dateParsed.day).toString()} ${Provider.of<Data>(context, listen: false).getMonthName((dateParsed.month).toString())}, $d:$c$b';
+      updTime = '${(dateParsed.day).toString()} ${Provider.of<Data>(context, listen: false).getMonthName((dateParsed.month).toString())}, ${dateParsed.hour}:$c$b';
     }
     if(updTime.toString().length < 2){
       updTime = 'N/A';
     }
-    print(widget.updateTime.toString());
 
     List<TableRow> tableData;
     List<TableRow> getTableData() {
@@ -278,11 +275,21 @@ class _UtilityState extends State<Utility> {
                 children: [
                   Text('', style: TextStyle(color: const Color(0xFFFE0E0E)),),
                   SizedBox(height: 5.0,),
+                  // RichText(
+                  //   textAlign: TextAlign.end,
+                  //     text: TextSpan(
+                  //         style: TextStyle(fontSize: 14.0, color: const Color(0xFF262626),),
+                  //         children: [
+                  //           TextSpan(text: widget.cost, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0, color: const Color(0xFF262626), fontFamily: 'Poppins'),),
+                  //           TextSpan(text: ' INR', style: TextStyle(fontFamily: 'Poppins',))
+                  //         ]
+                  //     )
+                  // ),
                   AutoSizeText.rich(
                     TextSpan(
                           style: TextStyle(fontSize: 14.0, color: const Color(0xFF262626),),
                           children: [
-                            TextSpan(text: '${widget.cost}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0, color: const Color(0xFF262626), fontFamily: 'Poppins'),),
+                            TextSpan(text: widget.cost, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0, color: const Color(0xFF262626), fontFamily: 'Poppins'),),
                             TextSpan(text: ' INR', style: TextStyle(fontFamily: 'Poppins',))
                           ]
                       ),
@@ -491,88 +498,54 @@ class Maintenance extends StatelessWidget {
     Key key,
     this.icon,
     this.cost,
-    this.data,
   }) : super(key: key);
 
   final String icon;
   final cost;
-  final data;
 
   @override
   Widget build(BuildContext context) {
     var date = (DateTime.now().day).toString() + " " + Provider.of<Data>(context, listen: false).getMonthName((DateTime.now().month).toString()).substring(0, 3);
 
-    if(Provider.of<Data>(context).dropdownValue == 'Week'){
-      DateTime startDate = new DateFormat("yyyy-MM-dd").parse(data['WeekStartDate'].toString());
-      DateTime endDate = new DateFormat("yyyy-MM-dd").parse(data['WeekEndDate'].toString());
-      date = "${startDate.day} ${Provider.of<Data>(context, listen: false).getMonthName(startDate.month.toString()).toString().substring(0, 3)} - ${endDate.day} ${Provider.of<Data>(context, listen: false).getMonthName(endDate.month.toString()).toString().substring(0, 3)}";
-    }
-    else if(Provider.of<Data>(context).dropdownValue == 'Month'){
-      date = "${Provider.of<Data>(context, listen: false).getMonthName(data['Month'].toString()).toString().substring(0, 3)}'${data['Year'].toString().substring(2)}";
-    }
-    else if(Provider.of<Data>(context).dropdownValue == 'Year'){
-      date = "${data['Year']}";
-    }
-
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Expanded(
-          flex: 6,
-          child: Container(
-            margin: EdgeInsets.only(bottom: 20.0),
-            child: Row(
-              children: [
-                SvgPicture.asset('assets/$icon', height: 55, width: 55,),
-                SizedBox(width: 10.0,),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Maintenance', style: TextStyle(color: const Color(0xFFF77C25)),),
-                      SizedBox(height: 5.0,),
-                      AutoSizeText(date, style: TextStyle(fontWeight: FontWeight.bold, color: const Color(0xFF262626)), maxLines: 1, minFontSize: 10,),
-                      SizedBox(height: 3.0,),
-                    ],
-                  ),
-                )
-              ],
-            ),
+        Container(
+          margin: EdgeInsets.only(bottom: 20.0),
+          child: Row(
+            children: [
+              SvgPicture.asset('assets/$icon', height: 55, width: 55,),
+              SizedBox(width: 10.0,),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Maintenance', style: TextStyle(color: const Color(0xFFF77C25)),),
+                  SizedBox(height: 5.0,),
+                  Text(date, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22.0, color: const Color(0xFF262626)),),
+                  SizedBox(height: 3.0,),
+                ],
+              )
+            ],
           ),
         ),
-        Expanded(
-          flex: 4,
-          child: Container(
-            margin: EdgeInsets.only(bottom: 20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Text(''),
-                SizedBox(height: 5.0,),
-                // RichText(
-                //     text: TextSpan(
-                //         style: TextStyle(fontSize: 14.0, color: const Color(0xFF262626),),
-                //         children: [
-                //           TextSpan(text: '$cost', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22.0, color: const Color(0xFF262626))),
-                //           TextSpan(text: ' INR')
-                //         ]
-                //     )
-                // ),
-                AutoSizeText.rich(
-                  TextSpan(
-                        style: TextStyle(fontSize: 14.0, color: const Color(0xFF262626),),
-                        children: [
-                          TextSpan(text: '$cost', style: TextStyle(fontWeight: FontWeight.bold, color: const Color(0xFF262626))),
-                          TextSpan(text: ' INR')
-                        ]
-                    ),
-                  maxLines: 1,
-                  minFontSize: 18,
-                ),
-                SizedBox(height: 3.0,),
-              ],
-            ),
+        Container(
+          margin: EdgeInsets.only(bottom: 20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              SizedBox(height: 10.0,),
+              RichText(
+                  text: TextSpan(
+                      style: TextStyle(fontSize: 14.0, color: const Color(0xFF262626),),
+                      children: [
+                        TextSpan(text: '$cost', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22.0, color: const Color(0xFF262626))),
+                        TextSpan(text: ' INR')
+                      ]
+                  )
+              ),
+              SizedBox(height: 3.0,),
+            ],
           ),
         ),
       ],

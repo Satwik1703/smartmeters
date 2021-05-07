@@ -231,7 +231,7 @@ class TransPrePost extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text('Postpaid', style: TextStyle(color: const Color(0xFFF77C25), fontSize: size_1),),
-                                    Text("Remaining Amount", style: TextStyle(fontSize: size_1*0.8),),
+                                    Text("Amount", style: TextStyle(fontSize: size_1),),
                                     RichText(
                                         text: TextSpan(
                                             style: TextStyle(fontSize: size_1, color: const Color(0xFF262626),),

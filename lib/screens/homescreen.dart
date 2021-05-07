@@ -3,8 +3,8 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_meter/components/dashboard.dart';
 import 'package:smart_meter/components/transactions.dart';
@@ -53,7 +53,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     var navBarHeight = kBottomNavigationBarHeight * 0.7;
     var navBarWidth = 0.7;
-    // var navBarWidth = 0.9;
 
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
@@ -221,3 +220,58 @@ class TestRow extends StatelessWidget {
     );
   }
 }
+// Row(
+// mainAxisAlignment: MainAxisAlignment.spaceBetween,
+// children: [
+// Container(
+// margin: EdgeInsets.only(bottom: 50.0),
+// child: Padding(
+// padding: const EdgeInsets.only(left: 18.0, right: 18.0, top: 34.0, bottom: 34.0),
+// child: Row(
+// children: [
+// ClipOval(
+// child: Material(
+// color: Colors.white, // button color
+// child: InkWell(
+// splashColor: Colors.red, // inkwell color
+// child: SizedBox(
+// width: 56,
+// height: 56,
+// // child: Icon(Icons.menu)
+// child: Image.network('${Provider.of<Data>(context, listen: false).url}${Provider.of<Data>(context, listen: false).data['customerflatData'][flatIndex]['projectData']['image']}', fit: BoxFit.cover,),
+// ),
+// onTap: () {},
+// ),
+// ),
+// ),
+// Padding(
+// padding: const EdgeInsets.all(8.0),
+// child: Column(
+// crossAxisAlignment: CrossAxisAlignment.start,
+// children: [
+// Text("${Provider.of<Data>(context).data['customerflatData'][flatIndex]['projectData']['builderName']}", style: TextStyle(fontSize: 10.0, color: Colors.white),),
+// Text("${Provider.of<Data>(context).data['customerflatData'][flatIndex]['projectData']['name']}", style: TextStyle(fontSize: 20.0, color: Colors.white, fontWeight: FontWeight.bold),)
+// ],
+// ),
+// )
+// ],
+// ),
+// ),
+// ),
+// Expanded(
+// child: Container(
+// margin: EdgeInsets.only(bottom: 50.0, right: 10.0),
+// child: Padding(
+// padding: const EdgeInsets.only(left: 18.0, right: 18.0, top: 34.0, bottom: 34.0),
+// child: Column(
+// crossAxisAlignment: CrossAxisAlignment.end,
+// children: [
+// Text("Home", style: TextStyle(fontSize: 10.0, color: Colors.white),),
+// Text("${Provider.of<Data>(context).data['customerflatData'][flatIndex]['blockData']['name']} ${Provider.of<Data>(context).data['customerflatData'][flatIndex]['flatData']['name']}", style: TextStyle(fontSize: 15.0, color: Colors.white, fontWeight: FontWeight.bold),)
+// ],
+// ),
+// ),
+// ),
+// )
+// ],
+// )

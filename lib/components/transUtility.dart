@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:io' show Platform, stdout;
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -29,18 +29,10 @@ class TransPayment extends StatelessWidget {
 
     var a = data['transactionDate'].toString().substring(0, 10);
     DateTime dateParsed = new DateFormat("yyyy-MM-dd").parse(a);
-    var time;
-    DateTime timeParsed = new DateFormat("hh:mm").parse(data['createdAt'].toString().substring(11, 16));
-    if(timeParsed.hour <= 12){
-      time = "${data['createdAt'].toString().substring(11, 16)} am";
-    }
-    else{
-      time = "${data['createdAt'].toString().substring(11, 16)} pm";
-    }
+    var time = data['createdAt'].toString().substring(11, 16);
 
     return RawMaterialButton(
       onPressed: (){
-        // print(data['createdAt']);
         showModalBottomSheet(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(30.0),
@@ -103,7 +95,7 @@ class TransPayment extends StatelessWidget {
                                                     children: [
                                                       Row(
                                                         children: [
-                                                          SizedBox(width: MediaQuery.of(context).size.width * 0.4, child: AutoSizeText("Paid Against ${Provider.of<Data>(context, listen: false).getMonthName(data['billGenerateData']['month'].toString()).substring(0, 3)}'${data['billGenerateData']['year'].toString().substring(2)} Invoice", style: TextStyle(fontFamily: 'Poppins'), minFontSize: 15 , maxLines: 1, overflow: TextOverflow.ellipsis, softWrap: false,)),
+                                                          Text("Paid Against ${Provider.of<Data>(context, listen: false).getMonthName(data['billGenerateData']['month'].toString()).substring(0, 3)}'${data['billGenerateData']['year'].toString().substring(2)} Invoice", style: TextStyle(fontFamily: 'Poppins', fontSize: size_2*0.75), maxLines: 1, overflow: TextOverflow.ellipsis, softWrap: false,),
                                                           Icon(Icons.verified, color: Colors.green,  size: 20,),
                                                         ],
                                                       ),
@@ -182,26 +174,20 @@ class TransPayment extends StatelessWidget {
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Expanded(
-                                          flex: 5,
-                                          child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              AutoSizeText('Wallet Transaction ID', maxLines: 1,),
-                                              AutoSizeText('${data['transactionId']}', maxLines: 1,)
-                                            ],
-                                          ),
+                                        Column(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text('Wallet Transaction ID'),
+                                            Text('${data['transactionId']}')
+                                          ],
                                         ),
-                                        Expanded(
-                                          flex: 5,
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.end,
-                                            children: [
-                                              AutoSizeText('Bank Reference No', maxLines: 1,),
-                                              AutoSizeText('N/A', maxLines: 1,),
-                                            ],
-                                          ),
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.end,
+                                          children: [
+                                            Text('Bank Reference No'),
+                                            Text('N/A'),
+                                          ],
                                         )
                                       ],
                                     ),
@@ -297,31 +283,20 @@ class TransUtility extends StatelessWidget {
     var size_2 = MediaQuery.of(context).size.width * 0.05;
     var icon;
     var utility;
-    var descTypes = ['Domestic Water(MW)', 'Drinking Water(TW)', 'Elactrcity', 'Diesel Generator', 'Maintaince', 'Electricity'];
-    var short = ['WM', 'GW', 'EB', 'DG', '', 'EB'];
-    var icons = ['11527', 'drinking', '11475', '11474', 'maintenance', '11475'];
+    var descTypes = ['Domestic Water(MW)', 'Drinking Water(TW)', 'Elactrcity', 'Diesel Generator', 'Maintaince'];
+    var short = ['WM', 'GW', 'EB', 'DG', ''];
+    var icons = ['11527', 'drinking', '11475', '11474', 'maintenance'];
     for (int i=0; i<descTypes.length; i++){
       if(data['Description'] == descTypes[i]){
         icon = icons[i];
         utility = short[i];
       }
     }
-    if(data['Description'] == 'Elactrcity'){
-      data['Description'] = 'Electricity';
-    }
-
     var h = (data['Description'] == 'Maintaince') ? 0.5 : 0.65;
 
     var a = data['transactionDate'].toString().substring(0, 10);
     DateTime dateParsed = new DateFormat("yyyy-MM-dd").parse(a);
-    var time;
-    DateTime timeParsed = new DateFormat("hh:mm").parse(data['createdAt'].toString().substring(11, 16));
-    if(timeParsed.hour <= 12){
-      time = "${data['createdAt'].toString().substring(11, 16)} am";
-    }
-    else{
-      time = "${data['createdAt'].toString().substring(11, 16)} pm";
-    }
+    var time = data['createdAt'].toString().substring(11, 16);
 
     return RawMaterialButton(
       onPressed: (){
@@ -566,26 +541,20 @@ class TransUtility extends StatelessWidget {
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Expanded(
-                                          flex: 5,
-                                          child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              AutoSizeText('Wallet Transaction ID', maxLines: 1,),
-                                              AutoSizeText('${data['transactionId']}', maxLines: 1,)
-                                            ],
-                                          ),
+                                        Column(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text('Wallet Transaction ID'),
+                                            Text('${data['transactionId']}')
+                                          ],
                                         ),
-                                        Expanded(
-                                          flex: 5,
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.end,
-                                            children: [
-                                              AutoSizeText('Bank Reference No', maxLines: 1,),
-                                              AutoSizeText('N/A', maxLines: 1,),
-                                            ],
-                                          ),
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.end,
+                                          children: [
+                                            Text('Bank Reference No'),
+                                            Text('N/A'),
+                                          ],
                                         )
                                       ],
                                     ),
@@ -773,14 +742,7 @@ class TransInvoice extends StatelessWidget {
 
     var a = data['transactionDate'].toString().substring(0, 10);
     DateTime dateParsed = new DateFormat("yyyy-MM-dd").parse(a);
-    var time;
-    DateTime timeParsed = new DateFormat("hh:mm").parse(data['createdAt'].toString().substring(11, 16));
-    if(timeParsed.hour <= 12){
-      time = "${data['createdAt'].toString().substring(11, 16)} am";
-    }
-    else{
-      time = "${data['createdAt'].toString().substring(11, 16)} pm";
-    }
+    var time = data['createdAt'].toString().substring(11, 16);
 
     return RawMaterialButton(
       onPressed: (){
@@ -846,7 +808,7 @@ class TransInvoice extends StatelessWidget {
                                                     children: [
                                                       Row(
                                                         children: [
-                                                          SizedBox(width: MediaQuery.of(context).size.width * 0.4 ,child: AutoSizeText("Invoice Generated for ${Provider.of<Data>(context, listen: false).getMonthName(data['billGenerateData']['month'].toString()).substring(0, 3)}'${data['billGenerateData']['year'].toString().substring(2)}", style: TextStyle(fontFamily: 'Poppins', ),minFontSize: 15, maxLines: 1, overflow: TextOverflow.ellipsis, softWrap: false,)),
+                                                          Text("Invoice Generated for ${Provider.of<Data>(context, listen: false).getMonthName(data['billGenerateData']['month'].toString()).substring(0, 3)}'${data['billGenerateData']['year'].toString().substring(2)}", style: TextStyle(fontFamily: 'Poppins', fontSize: size_2*0.7), maxLines: 1, overflow: TextOverflow.ellipsis, softWrap: false,),
                                                           Icon(Icons.verified, color: Colors.green, size: 20.0,),
                                                         ],
                                                       ),
@@ -909,26 +871,20 @@ class TransInvoice extends StatelessWidget {
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Expanded(
-                                          child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              AutoSizeText('Wallet Transaction ID', maxLines: 1,),
-                                              AutoSizeText('${data['transactionId']}', maxLines: 1,)
-                                            ],
-                                          ),
-                                          flex: 5,
+                                        Column(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text('Wallet Transaction ID'),
+                                            Text('${data['transactionId']}')
+                                          ],
                                         ),
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.end,
-                                            children: [
-                                              AutoSizeText('Bank Reference No', maxLines: 1,),
-                                              AutoSizeText('N/A', maxLines: 1,),
-                                            ],
-                                          ),
-                                          flex: 5,
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.end,
+                                          children: [
+                                            Text('Bank Reference No'),
+                                            Text('N/A'),
+                                          ],
                                         )
                                       ],
                                     ),
@@ -987,9 +943,7 @@ class TransInvoice extends StatelessWidget {
                                   ),
 
                                   SizedBox(height: 20.0,),
-                                  (Platform.isIOS)
-                                    ? Container(height: 0,)
-                                    : Padding(
+                                  Padding(
                                     padding: EdgeInsets.symmetric(horizontal: 20.0),
                                     child: RawMaterialButton(
                                         onPressed: () async{
@@ -999,6 +953,7 @@ class TransInvoice extends StatelessWidget {
                                             toastLength: Toast.LENGTH_LONG,
                                             gravity: ToastGravity.BOTTOM,
                                           );
+
                                         },
                                         child: Center(
                                           child: Container(
@@ -1021,7 +976,7 @@ class TransInvoice extends StatelessWidget {
                                           ),
                                         )
                                     ),
-                                  ),
+                                  )
 
                                 ],
                               ),
