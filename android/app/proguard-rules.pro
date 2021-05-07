@@ -1,0 +1,2 @@
+-keep class com.shockwave.** { *; }
+-keep class com.shockwave.**
