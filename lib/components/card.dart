@@ -46,7 +46,7 @@ class PrepaidCard extends StatelessWidget {
                                   text: TextSpan(
                                       style: TextStyle(fontSize: size_1, color: const Color(0xFF262626),),
                                       children: [
-                                        TextSpan(text: '${Provider.of<Data>(context).dashboardData['prepaiddata']['TotalCost']}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: size_2, color: const Color(0xFF262626))),
+                                        TextSpan(text: '${Provider.of<Data>(context).dashboardData['meterdata']['TotalCost']}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: size_2, color: const Color(0xFF262626))),
                                         TextSpan(text: '/6000')
                                       ]
                                   )
@@ -55,9 +55,9 @@ class PrepaidCard extends StatelessWidget {
                                   backgroundColor: const Color(0xFFECECEC),
                                   valueColor: AlwaysStoppedAnimation(const Color(0xFFF77C25)),
                                   minHeight: 20,
-                                  value: (Provider.of<Data>(context).dashboardData['prepaiddata']['TotalCost'].runtimeType != String)
-                                      ? (Provider.of<Data>(context).dashboardData['prepaiddata']['TotalCost'] / 6000)
-                                      : (double.parse(Provider.of<Data>(context).dashboardData['prepaiddata']['TotalCost']) / 6000)
+                                  value: (Provider.of<Data>(context).dashboardData['meterdata']['TotalCost'].runtimeType != String)
+                                      ? (Provider.of<Data>(context).dashboardData['meterdata']['TotalCost'] / 6000)
+                                      : (double.parse(Provider.of<Data>(context).dashboardData['meterdata']['TotalCost']) / 6000)
                               ),
                               // Text('Safe to Spend 400/day', style: TextStyle(fontSize: size_1),)
                             ],
