@@ -11,8 +11,8 @@ import 'package:http/http.dart' as http;
 import 'components/utilities.dart';
 
 class Data extends ChangeNotifier {
-  // var url = 'http://18.136.149.198:3074/api'; //Dev url
-  var url = 'http://65.1.28.192:3074/api';  //Production url
+  var url = 'http://18.136.149.198:3074/api'; //Dev url
+  // var url = 'http://65.1.28.192:3074/api';  //Production url
 
   var mobile_number = '';
   var otp = '';
