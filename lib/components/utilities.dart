@@ -534,7 +534,8 @@ class Maintenance extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              SizedBox(height: 10.0,),
+              Text(''),
+              SizedBox(height: 5.0,),
               RichText(
                   text: TextSpan(
                       style: TextStyle(fontSize: 14.0, color: const Color(0xFF262626),),
