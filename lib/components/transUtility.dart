@@ -174,20 +174,26 @@ class TransPayment extends StatelessWidget {
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Column(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text('Wallet Transaction ID'),
-                                            Text('${data['transactionId']}')
-                                          ],
+                                        Expanded(
+                                          flex: 5,
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              AutoSizeText('Wallet Transaction ID', maxLines: 1,),
+                                              AutoSizeText('${data['transactionId']}', maxLines: 1,)
+                                            ],
+                                          ),
                                         ),
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.end,
-                                          children: [
-                                            Text('Bank Reference No'),
-                                            Text('N/A'),
-                                          ],
+                                        Expanded(
+                                          flex: 5,
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.end,
+                                            children: [
+                                              AutoSizeText('Bank Reference No', maxLines: 1,),
+                                              AutoSizeText('N/A', maxLines: 1,),
+                                            ],
+                                          ),
                                         )
                                       ],
                                     ),
@@ -541,20 +547,26 @@ class TransUtility extends StatelessWidget {
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Column(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text('Wallet Transaction ID'),
-                                            Text('${data['transactionId']}')
-                                          ],
+                                        Expanded(
+                                          flex: 5,
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              AutoSizeText('Wallet Transaction ID', maxLines: 1,),
+                                              AutoSizeText('${data['transactionId']}', maxLines: 1,)
+                                            ],
+                                          ),
                                         ),
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.end,
-                                          children: [
-                                            Text('Bank Reference No'),
-                                            Text('N/A'),
-                                          ],
+                                        Expanded(
+                                          flex: 5,
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.end,
+                                            children: [
+                                              AutoSizeText('Bank Reference No', maxLines: 1,),
+                                              AutoSizeText('N/A', maxLines: 1,),
+                                            ],
+                                          ),
                                         )
                                       ],
                                     ),
@@ -808,7 +820,7 @@ class TransInvoice extends StatelessWidget {
                                                     children: [
                                                       Row(
                                                         children: [
-                                                          Text("Invoice Generated for ${Provider.of<Data>(context, listen: false).getMonthName(data['billGenerateData']['month'].toString()).substring(0, 3)}'${data['billGenerateData']['year'].toString().substring(2)}", style: TextStyle(fontFamily: 'Poppins', fontSize: size_2*0.7), maxLines: 1, overflow: TextOverflow.ellipsis, softWrap: false,),
+                                                          SizedBox(width: MediaQuery.of(context).size.width * 0.4 ,child: AutoSizeText("Invoice Generated for ${Provider.of<Data>(context, listen: false).getMonthName(data['billGenerateData']['month'].toString()).substring(0, 3)}'${data['billGenerateData']['year'].toString().substring(2)}", style: TextStyle(fontFamily: 'Poppins', ),minFontSize: 15, maxLines: 1, overflow: TextOverflow.ellipsis, softWrap: false,)),
                                                           Icon(Icons.verified, color: Colors.green, size: 20.0,),
                                                         ],
                                                       ),
@@ -871,20 +883,26 @@ class TransInvoice extends StatelessWidget {
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Column(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text('Wallet Transaction ID'),
-                                            Text('${data['transactionId']}')
-                                          ],
+                                        Expanded(
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              AutoSizeText('Wallet Transaction ID', maxLines: 1,),
+                                              AutoSizeText('${data['transactionId']}', maxLines: 1,)
+                                            ],
+                                          ),
+                                          flex: 5,
                                         ),
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.end,
-                                          children: [
-                                            Text('Bank Reference No'),
-                                            Text('N/A'),
-                                          ],
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.end,
+                                            children: [
+                                              AutoSizeText('Bank Reference No', maxLines: 1,),
+                                              AutoSizeText('N/A', maxLines: 1,),
+                                            ],
+                                          ),
+                                          flex: 5,
                                         )
                                       ],
                                     ),

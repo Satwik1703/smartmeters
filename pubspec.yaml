@@ -37,10 +37,10 @@ dependencies:
   auto_size_text: ^2.0.2
   syncfusion_flutter_charts: ^18.3.53
   custom_radio_grouped_button: ^1.0.6
-  path_provider: ^1.6.28
-  flutter_downloader: ^1.5.0
+#  path_provider: ^1.6.28
+#  flutter_downloader: ^1.5.0
   fluttertoast: ^7.1.8
-  permission_handler: ^5.1.0
+#  permission_handler: ^5.1.0
   syncfusion_flutter_pdfviewer: ^18.4.49-beta
 
 dev_dependencies:
