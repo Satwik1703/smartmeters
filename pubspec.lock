@@ -153,13 +153,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_downloader:
-    dependency: "direct main"
-    description:
-      name: flutter_downloader
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.5.2"
   flutter_driver:
     dependency: transitive
     description: flutter
@@ -319,7 +312,7 @@ packages:
     source: hosted
     version: "0.1.4"
   path_provider:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: path_provider
       url: "https://pub.dartlang.org"
@@ -360,20 +353,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.10.0-nullsafety.3"
-  permission_handler:
-    dependency: "direct main"
-    description:
-      name: permission_handler
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "5.1.0+2"
-  permission_handler_platform_interface:
-    dependency: transitive
-    description:
-      name: permission_handler_platform_interface
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.2"
   petitparser:
     dependency: transitive
     description:
