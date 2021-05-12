@@ -987,7 +987,7 @@ class TransInvoice extends StatelessWidget {
                                   ),
 
                                   SizedBox(height: 20.0,),
-                                  (Platform.isMacOS)
+                                  (Platform.isIOS)
                                     ? Container(height: 0,)
                                     : Padding(
                                     padding: EdgeInsets.symmetric(horizontal: 20.0),
