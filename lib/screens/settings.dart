@@ -1,5 +1,9 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_meter/data.dart';
 
 class Settings extends StatelessWidget {
   @override
@@ -18,6 +22,133 @@ class Settings extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: const Color(0xFFFAFAFA),
                     borderRadius: BorderRadius.only(topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.15, left: 15, right: 15, bottom: 15),
+                    child: Column(
+                      children: [
+                        RawMaterialButton(
+                          child: SizedBox(
+                            width: double.infinity,
+                            height: MediaQuery.of(context).size.height * 0.1,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    SvgPicture.asset('assets/my_home_settings.svg', height: 50, width: 50,),
+                                    SizedBox(width: 10,),
+                                    Text('My Home', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),)
+                                  ],
+                                ),
+                                Icon(Icons.arrow_forward_ios, size: 20, color: Colors.orange,),
+                              ],
+                            )
+                          ),
+                          onPressed: (){
+                            var data = Provider.of<Data>(context, listen:false).data['customerflatData'];
+                            showModalBottomSheet(
+                              shape: RoundedRectangleBorder(
+                               borderRadius: BorderRadius.circular(30.0),
+                              ),
+                              isScrollControlled: true,
+                              context: context,
+                              builder: (BuildContext context) {
+                                return DraggableScrollableSheet(
+                                  initialChildSize: 0.4, //set this as you want
+                                  maxChildSize: 0.8, //set this as you want
+                                  minChildSize: 0.3, //set this as you want
+                                  expand: false,
+                                  builder: (context, scrollController) {
+                                    return Container(
+                                      padding: EdgeInsets.only(top: 30.0, left: 20.0, right: 20.0),
+                                      child: ListView.builder(
+                                        controller: scrollController,
+                                        itemCount: data.length,
+                                        itemBuilder: (context, index){
+                                          return Column(
+                                            children: [
+                                              Container(
+                                                margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 15.0),
+                                                child: RawMaterialButton(
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(10.0),
+                                                  ),
+                                                  onPressed: (){
+                                                    Provider.of<Data>(context, listen: false).setFlatIndex(index);
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: SizedBox(
+                                                    width: double.infinity,
+                                                    height: MediaQuery.of(context).size.height * 0.09,
+                                                    child: Row(
+                                                      children: [
+                                                        ClipOval(
+                                                          child: Material(
+                                                            color: Colors.white, // button color
+                                                            child: InkWell(
+                                                              splashColor: Colors.red, // inkwell color
+                                                              child: SizedBox(
+                                                                width: 65,
+                                                                height: 65,
+                                                                child: Image.network('${Provider.of<Data>(context, listen: false).url}${Provider.of<Data>(context, listen: false).data['customerflatData'][index]['projectData']['image']}', fit: BoxFit.cover,),
+                                                              ),
+                                                              onTap: () {},
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        SizedBox(width: 10.0,),
+                                                        Expanded(
+                                                          flex: 6,
+                                                          child: Column(
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                            children: [
+                                                              (Provider.of<Data>(context).data['customerflatData'][index]['projectData']['builderName'] != null)
+                                                              ? Text("${Provider.of<Data>(context).data['customerflatData'][index]['projectData']['builderName']}", style: TextStyle(fontSize: 10.0, color: Colors.grey),) : Text(' ', style: TextStyle(fontSize: 10.0),),
+                                                              AutoSizeText("${Provider.of<Data>(context).data['customerflatData'][index]['projectData']['name']}", style: TextStyle(color: Color(0xFFF77C25), fontWeight: FontWeight.bold), minFontSize: 15.0, maxLines: 1,)
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        Expanded(
+                                                          flex: 4,
+                                                          child: Column(
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            crossAxisAlignment: CrossAxisAlignment.end,
+                                                            children: [
+                                                              Text("Home", style: TextStyle(fontSize: 10.0, color: Colors.grey), textAlign: TextAlign.end,),
+                                                              AutoSizeText("${Provider.of<Data>(context).data['customerflatData'][index]['blockData']['name']} ${Provider.of<Data>(context).data['customerflatData'][index]['flatData']['name']}", style: TextStyle(color: Color(0xFFF77C25), fontWeight: FontWeight.bold), maxLines: 1, minFontSize: 2, textAlign: TextAlign.end,)
+                                                            ],
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                                                child: Divider(
+                                                  color: Colors.grey,
+                                                  thickness: 0.2,
+                                                ),
+                                              )
+                                            ],
+                                          );
+                                        },
+                                      )
+                                    );
+                                  }
+                                );
+                              }
+                            );
+
+
+                          },
+                        ),
+
+                      ],
+                    ),
                   ),
                 ),
                 Positioned(
@@ -60,22 +191,28 @@ class SettingsCard extends StatelessWidget {
                     Expanded(
                       child: Column(
                         // mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          AutoSizeText('Sandeep Raj', minFontSize: 20.0, maxLines: 1,),
-                          Row(
-                            children: [
-                              Icon(Icons.phone, color: Colors.orange, size: 15.0,),
-                              SizedBox(width: 15.0,),
-                              Text('+91 7799800005'),
-                            ],
+                          Expanded(flex: 3 ,child: AutoSizeText('Sandeep Raj', minFontSize: 20.0, maxLines: 1,)),
+                          Expanded(
+                            flex: 2,
+                            child: Row(
+                              children: [
+                                Icon(Icons.phone, color: Colors.orange, size: 15.0,),
+                                SizedBox(width: 15.0,),
+                                Expanded(child: AutoSizeText('+91 7799800005', maxLines: 1, minFontSize: 2,)),
+                              ],
+                            ),
                           ),
-                          Row(
-                            children: [
-                              Icon(Icons.email_outlined, color: Colors.orange, size: 15.0,),
-                              SizedBox(width: 15.0,),
-                              AutoSizeText('+91 sathwikgaddam@gmail.com'),
-                            ],
+                          Expanded(
+                            flex: 2,
+                            child: Row(
+                              children: [
+                                Icon(Icons.email_outlined, color: Colors.orange, size: 15.0,),
+                                SizedBox(width: 15.0,),
+                                Expanded(child: AutoSizeText('sathwikgaddam@gmail.com', maxLines: 1, minFontSize: 2,)),
+                              ],
+                            ),
                           ),
                         ],
                       ),
@@ -86,7 +223,27 @@ class SettingsCard extends StatelessWidget {
             ),
             Expanded(
               flex: 3,
-              child: Container(color: Colors.green,),
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 20.0),
+                color: Color.fromRGBO(247, 124, 37, 0.1),
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 7,
+                      child: AutoSizeText('Member since 2 years', maxLines: 1, minFontSize: 2,),
+                    ),
+                    Expanded(
+                      flex: 3,
+                      child: GestureDetector(
+                        onTap: (){
+                          print('Edit Profile');
+                        },
+                        child: AutoSizeText('Edit Profile', style: TextStyle(color: Color(0xFFF77C25)), maxLines: 1, minFontSize: 10.0, textAlign: TextAlign.end,),
+                      ),
+                    )
+                  ],
+                ),
+              ),
             )
           ],
         ),
