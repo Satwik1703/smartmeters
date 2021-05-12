@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'dart:io' show Platform, stdout;
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -29,10 +29,18 @@ class TransPayment extends StatelessWidget {
 
     var a = data['transactionDate'].toString().substring(0, 10);
     DateTime dateParsed = new DateFormat("yyyy-MM-dd").parse(a);
-    var time = data['createdAt'].toString().substring(11, 16);
+    var time;
+    DateTime timeParsed = new DateFormat("hh:mm").parse(data['createdAt'].toString().substring(11, 16));
+    if(timeParsed.hour <= 12){
+      time = "${data['createdAt'].toString().substring(11, 16)} am";
+    }
+    else{
+      time = "${data['createdAt'].toString().substring(11, 16)} pm";
+    }
 
     return RawMaterialButton(
       onPressed: (){
+        // print(data['createdAt']);
         showModalBottomSheet(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(30.0),
@@ -289,20 +297,31 @@ class TransUtility extends StatelessWidget {
     var size_2 = MediaQuery.of(context).size.width * 0.05;
     var icon;
     var utility;
-    var descTypes = ['Domestic Water(MW)', 'Drinking Water(TW)', 'Elactrcity', 'Diesel Generator', 'Maintaince'];
-    var short = ['WM', 'GW', 'EB', 'DG', ''];
-    var icons = ['11527', 'drinking', '11475', '11474', 'maintenance'];
+    var descTypes = ['Domestic Water(MW)', 'Drinking Water(TW)', 'Elactrcity', 'Diesel Generator', 'Maintaince', 'Electricity'];
+    var short = ['WM', 'GW', 'EB', 'DG', '', 'EB'];
+    var icons = ['11527', 'drinking', '11475', '11474', 'maintenance', '11475'];
     for (int i=0; i<descTypes.length; i++){
       if(data['Description'] == descTypes[i]){
         icon = icons[i];
         utility = short[i];
       }
     }
+    if(data['Description'] == 'Elactrcity'){
+      data['Description'] = 'Electricity';
+    }
+
     var h = (data['Description'] == 'Maintaince') ? 0.5 : 0.65;
 
     var a = data['transactionDate'].toString().substring(0, 10);
     DateTime dateParsed = new DateFormat("yyyy-MM-dd").parse(a);
-    var time = data['createdAt'].toString().substring(11, 16);
+    var time;
+    DateTime timeParsed = new DateFormat("hh:mm").parse(data['createdAt'].toString().substring(11, 16));
+    if(timeParsed.hour <= 12){
+      time = "${data['createdAt'].toString().substring(11, 16)} am";
+    }
+    else{
+      time = "${data['createdAt'].toString().substring(11, 16)} pm";
+    }
 
     return RawMaterialButton(
       onPressed: (){
@@ -754,7 +773,14 @@ class TransInvoice extends StatelessWidget {
 
     var a = data['transactionDate'].toString().substring(0, 10);
     DateTime dateParsed = new DateFormat("yyyy-MM-dd").parse(a);
-    var time = data['createdAt'].toString().substring(11, 16);
+    var time;
+    DateTime timeParsed = new DateFormat("hh:mm").parse(data['createdAt'].toString().substring(11, 16));
+    if(timeParsed.hour <= 12){
+      time = "${data['createdAt'].toString().substring(11, 16)} am";
+    }
+    else{
+      time = "${data['createdAt'].toString().substring(11, 16)} pm";
+    }
 
     return RawMaterialButton(
       onPressed: (){
@@ -961,7 +987,9 @@ class TransInvoice extends StatelessWidget {
                                   ),
 
                                   SizedBox(height: 20.0,),
-                                  Padding(
+                                  (Platform.isMacOS)
+                                    ? Container(height: 0,)
+                                    : Padding(
                                     padding: EdgeInsets.symmetric(horizontal: 20.0),
                                     child: RawMaterialButton(
                                         onPressed: () async{
@@ -971,7 +999,6 @@ class TransInvoice extends StatelessWidget {
                                             toastLength: Toast.LENGTH_LONG,
                                             gravity: ToastGravity.BOTTOM,
                                           );
-
                                         },
                                         child: Center(
                                           child: Container(
@@ -994,7 +1021,7 @@ class TransInvoice extends StatelessWidget {
                                           ),
                                         )
                                     ),
-                                  )
+                                  ),
 
                                 ],
                               ),

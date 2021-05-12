@@ -416,7 +416,7 @@ class PrePost extends StatelessWidget {
                                         text: TextSpan(
                                             style: TextStyle(fontSize: size_1, color: const Color(0xFF262626),),
                                             children: [
-                                              TextSpan(text: '${Provider.of<Data>(context).dashboardData['postpaiddata']['remainingAmount']}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: size_2, color: const Color(0xFF262626))),
+                                              TextSpan(text: '${Provider.of<Data>(context).dashboardData['postpaiddata']['remainingAmount']}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: size_2*0.75, color: const Color(0xFF262626))),
                                               TextSpan(text: ' INR'),
                                             ]
                                         )
