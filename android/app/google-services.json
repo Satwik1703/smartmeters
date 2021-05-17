@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "970343621443",
+    "project_id": "pertsmartmeter",
+    "storage_bucket": "pertsmartmeter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:970343621443:android:853a7419982e6bbe5d45f6",
+        "android_client_info": {
+          "package_name": "com.pert.smart_meter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "970343621443-l7vcoil9qm9is6p3bes1u1riad97n4d3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pert.smart_meter",
+            "certificate_hash": "1842773d24829929991d71a0b21460615310c5de"
+          }
+        },
+        {
+          "client_id": "970343621443-gshan0qic9h3ojpl7b3gstjn3eijd13h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAj6GR8J9gzKCEX5kQ96zp1JIIrq1DjB_M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "970343621443-gshan0qic9h3ojpl7b3gstjn3eijd13h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
