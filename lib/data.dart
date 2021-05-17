@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:io' show Platform, stdout;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
-import 'package:path_provider/path_provider.dart';
+// import 'package:flutter_downloader/flutter_downloader.dart';
+// import 'package:path_provider/path_provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -151,15 +151,15 @@ class Data extends ChangeNotifier {
   }
   
   Future<void> getDashboardData() async{
-    try{
-      WidgetsFlutterBinding.ensureInitialized();
-      await FlutterDownloader.initialize(
-          debug: true // optional: set false to disable printing logs to console
-      );
-    }
-    catch (e){
-      print('Initialize warning');
-    }
+    // try{
+    //   WidgetsFlutterBinding.ensureInitialized();
+    //   await FlutterDownloader.initialize(
+    //       debug: true // optional: set false to disable printing logs to console
+    //   );
+    // }
+    // catch (e){
+    //   print('Initialize warning');
+    // }
 
     http.Response response = await http.post(
         '$url/meterDataSummaries/getCustomerData?token=${data['token']}',
@@ -500,16 +500,16 @@ class Data extends ChangeNotifier {
       gravity: ToastGravity.BOTTOM,
     );
 
-    String dir = (await getExternalStorageDirectory()).path;
-    final taskId = await FlutterDownloader.enqueue(
-      url: '$url/containers/invoice/download/$invoiceNo.pdf',
-      savedDir: '$dir',
-      showNotification: true, // show download progress in status bar (for Android)
-      openFileFromNotification: true, // click on notification to open downloaded file (for Android)
-    );
-
-    await Future.delayed(const Duration(seconds: 2), (){});
-    await FlutterDownloader.open(taskId: taskId);
+    // String dir = (await getExternalStorageDirectory()).path;
+    // final taskId = await FlutterDownloader.enqueue(
+    //   url: '$url/containers/invoice/download/$invoiceNo.pdf',
+    //   savedDir: '$dir',
+    //   showNotification: true, // show download progress in status bar (for Android)
+    //   openFileFromNotification: true, // click on notification to open downloaded file (for Android)
+    // );
+    //
+    // await Future.delayed(const Duration(seconds: 2), (){});
+    // await FlutterDownloader.open(taskId: taskId);
     return ("Download Completed");
   }
 }
