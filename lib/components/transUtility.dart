@@ -103,7 +103,7 @@ class TransPayment extends StatelessWidget {
                                                     children: [
                                                       Row(
                                                         children: [
-                                                          Text("Paid Against ${Provider.of<Data>(context, listen: false).getMonthName(data['billGenerateData']['month'].toString()).substring(0, 3)}'${data['billGenerateData']['year'].toString().substring(2)} Invoice", style: TextStyle(fontFamily: 'Poppins', fontSize: size_2*0.75), maxLines: 1, overflow: TextOverflow.ellipsis, softWrap: false,),
+                                                          SizedBox(width: MediaQuery.of(context).size.width * 0.4, child: AutoSizeText("Paid Against ${Provider.of<Data>(context, listen: false).getMonthName(data['billGenerateData']['month'].toString()).substring(0, 3)}'${data['billGenerateData']['year'].toString().substring(2)} Invoice", style: TextStyle(fontFamily: 'Poppins'), minFontSize: 15 , maxLines: 1, overflow: TextOverflow.ellipsis, softWrap: false,)),
                                                           Icon(Icons.verified, color: Colors.green,  size: 20,),
                                                         ],
                                                       ),

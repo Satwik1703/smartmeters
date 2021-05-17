@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -7,9 +8,8 @@ import 'package:smart_meter/screens/welcome.dart';
 import 'package:flutter_svg/svg.dart';
 
 void main() async{
-  // await precachePicture(ExactAssetPicture(SvgPicture.svgStringDecoder, 'assets/sp1.svg'), null);
-  // await precachePicture(ExactAssetPicture(SvgPicture.svgStringDecoder, 'assets/sp2.svg'), null);
-  // await precachePicture(ExactAssetPicture(SvgPicture.svgStringDecoder, 'assets/sp3.svg'), null);
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
