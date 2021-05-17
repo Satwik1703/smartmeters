@@ -111,12 +111,13 @@ class _UtilityState extends State<Utility> {
       var b = widget.updateTime.toString().substring(widget.updateTime.toString().length -3);
       DateTime dateParsed = new DateFormat("dd-MM-yyyy h:mm:ss").parse(a);
       var c = (dateParsed.minute.toString().length < 2) ? '0${dateParsed.minute}' : dateParsed.minute;
-      var d = (dateParsed.hour.toString() == '0') ? '00' : dateParsed.hour;
+      var d = (dateParsed.hour.toString() == '0' || dateParsed.hour.toString() == '00') ? '12' : dateParsed.hour;
       updTime = '${(dateParsed.day).toString()} ${Provider.of<Data>(context, listen: false).getMonthName((dateParsed.month).toString())}, $d:$c$b';
     }
     if(updTime.toString().length < 2){
       updTime = 'N/A';
     }
+    print(widget.updateTime.toString());
 
     List<TableRow> tableData;
     List<TableRow> getTableData() {
@@ -281,7 +282,7 @@ class _UtilityState extends State<Utility> {
                     TextSpan(
                           style: TextStyle(fontSize: 14.0, color: const Color(0xFF262626),),
                           children: [
-                            TextSpan(text: widget.cost, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0, color: const Color(0xFF262626), fontFamily: 'Poppins'),),
+                            TextSpan(text: '${widget.cost}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0, color: const Color(0xFF262626), fontFamily: 'Poppins'),),
                             TextSpan(text: ' INR', style: TextStyle(fontFamily: 'Poppins',))
                           ]
                       ),
