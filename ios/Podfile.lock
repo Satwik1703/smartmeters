@@ -1,0 +1,132 @@
+PODS:
+  - Firebase/Auth (7.3.0):
+    - Firebase/CoreOnly
+    - FirebaseAuth (~> 7.3.0)
+  - Firebase/CoreOnly (7.3.0):
+    - FirebaseCore (= 7.3.0)
+  - firebase_auth (0.20.1):
+    - Firebase/Auth (= 7.3.0)
+    - firebase_core
+    - Flutter
+  - firebase_core (0.7.0):
+    - Firebase/CoreOnly (= 7.3.0)
+    - Flutter
+  - FirebaseAuth (7.3.0):
+    - FirebaseCore (~> 7.0)
+    - GoogleUtilities/AppDelegateSwizzler (~> 7.0)
+    - GoogleUtilities/Environment (~> 7.0)
+    - GTMSessionFetcher/Core (~> 1.4)
+  - FirebaseCore (7.3.0):
+    - FirebaseCoreDiagnostics (~> 7.0)
+    - GoogleUtilities/Environment (~> 7.0)
+    - GoogleUtilities/Logger (~> 7.0)
+  - FirebaseCoreDiagnostics (7.11.0):
+    - GoogleDataTransport (~> 8.4)
+    - GoogleUtilities/Environment (~> 7.0)
+    - GoogleUtilities/Logger (~> 7.0)
+    - nanopb (~> 2.30908.0)
+  - Flutter (1.0.0)
+  - fluttertoast (0.0.2):
+    - Flutter
+    - Toast
+  - GoogleDataTransport (8.4.0):
+    - GoogleUtilities/Environment (~> 7.2)
+    - nanopb (~> 2.30908.0)
+    - PromisesObjC (~> 1.2)
+  - GoogleUtilities/AppDelegateSwizzler (7.4.1):
+    - GoogleUtilities/Environment
+    - GoogleUtilities/Logger
+    - GoogleUtilities/Network
+  - GoogleUtilities/Environment (7.4.1):
+    - PromisesObjC (~> 1.2)
+  - GoogleUtilities/Logger (7.4.1):
+    - GoogleUtilities/Environment
+  - GoogleUtilities/Network (7.4.1):
+    - GoogleUtilities/Logger
+    - "GoogleUtilities/NSData+zlib"
+    - GoogleUtilities/Reachability
+  - "GoogleUtilities/NSData+zlib (7.4.1)"
+  - GoogleUtilities/Reachability (7.4.1):
+    - GoogleUtilities/Logger
+  - GTMSessionFetcher/Core (1.5.0)
+  - integration_test (0.0.1):
+    - Flutter
+  - nanopb (2.30908.0):
+    - nanopb/decode (= 2.30908.0)
+    - nanopb/encode (= 2.30908.0)
+  - nanopb/decode (2.30908.0)
+  - nanopb/encode (2.30908.0)
+  - path_provider (0.0.1):
+    - Flutter
+  - PromisesObjC (1.2.12)
+  - shared_preferences (0.0.1):
+    - Flutter
+  - syncfusion_flutter_pdfviewer (0.0.1):
+    - Flutter
+  - Toast (4.0.0)
+
+DEPENDENCIES:
+  - Firebase/Analytics
+  - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
+  - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
+  - Flutter (from `Flutter`)
+  - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
+  - integration_test (from `.symlinks/plugins/integration_test/ios`)
+  - path_provider (from `.symlinks/plugins/path_provider/ios`)
+  - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
+  - syncfusion_flutter_pdfviewer (from `.symlinks/plugins/syncfusion_flutter_pdfviewer/ios`)
+
+SPEC REPOS:
+  trunk:
+    - Firebase
+    - FirebaseAuth
+    - FirebaseCore
+    - FirebaseCoreDiagnostics
+    - GoogleDataTransport
+    - GoogleUtilities
+    - GTMSessionFetcher
+    - nanopb
+    - PromisesObjC
+    - Toast
+
+EXTERNAL SOURCES:
+  firebase_auth:
+    :path: ".symlinks/plugins/firebase_auth/ios"
+  firebase_core:
+    :path: ".symlinks/plugins/firebase_core/ios"
+  Flutter:
+    :path: Flutter
+  fluttertoast:
+    :path: ".symlinks/plugins/fluttertoast/ios"
+  integration_test:
+    :path: ".symlinks/plugins/integration_test/ios"
+  path_provider:
+    :path: ".symlinks/plugins/path_provider/ios"
+  shared_preferences:
+    :path: ".symlinks/plugins/shared_preferences/ios"
+  syncfusion_flutter_pdfviewer:
+    :path: ".symlinks/plugins/syncfusion_flutter_pdfviewer/ios"
+
+SPEC CHECKSUMS:
+  Firebase: 26223c695fe322633274198cb19dca8cb7e54416
+  firebase_auth: 7220e26fc14a501a63093edc10443de6bca0d7e8
+  firebase_core: 91b27774a52f41f8b58484a75edf71197ac01c59
+  FirebaseAuth: c224a0cf1afa0949bd5c7bfcf154b4f5ce8ddef2
+  FirebaseCore: 4d3c72622ce0e2106aaa07bb4b2935ba2c370972
+  FirebaseCoreDiagnostics: 68ad972f99206cef818230f3f3179d52ccfb7f8c
+  Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
+  fluttertoast: 6122fa75143e992b1d3470f61000f591a798cc58
+  GoogleDataTransport: cd9db2180fcecd8da1b561aea31e3e56cf834aa7
+  GoogleUtilities: f8a43108b38a68eebe8b3540e1f4f2d28843ce20
+  GTMSessionFetcher: b3503b20a988c4e20cc189aa798fd18220133f52
+  integration_test: 6eb66a19f7104200dcfdd62bc0077e1b09686e4f
+  nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
+  path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
+  PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
+  shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
+  syncfusion_flutter_pdfviewer: bb9998884b864cfedf72628df3503bdf57e397c0
+  Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
+
+PODFILE CHECKSUM: 7d6940c27583c847bf2c7dcbac83d0a5f5ae504a
+
+COCOAPODS: 1.10.1
