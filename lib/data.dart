@@ -83,7 +83,6 @@ class Data extends ChangeNotifier {
 
   void updateCounterDate(){
     counterDate = new DateTime(counterDate.year, counterDate.month-1, counterDate.day);
-    print(counterDate.month.toString() + counterDate.year.toString());
     // notifyListeners();
   }
 
@@ -466,7 +465,6 @@ class Data extends ChangeNotifier {
           'Content-Type': 'application/json; charset=UTF-8',
         },
     );
-    print('$month $year');
 
     var res = json.decode(response.body);
     if(res != null || res != [] || res.toString().length > 1 || res){
@@ -512,4 +510,67 @@ class Data extends ChangeNotifier {
     await FlutterDownloader.open(taskId: taskId);
     return ("Download Completed");
   }
+
+  Future<void> logout() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+  }
+
+  Future<void> editProfile(name, mobileNo, email) async{
+    if(name == ''){
+      name = '${data['firstName']} ${data['lastName']}';
+    }
+    if(mobileNo == ''){ 
+      mobileNo = '${data['mobileNo']}';
+    }
+    if(email == ''){
+      email = '${data['email']}';
+    }
+    var spaceIndex = name.toString().indexOf(" ");
+    var firstName = name.toString().substring(0, spaceIndex);
+    var lastName = name.toString().substring(spaceIndex+1);
+    var spaceNumberIndex = mobileNo.toString().indexOf(" ");
+    mobileNo = mobileNo.toString().substring(spaceNumberIndex+1).trim();
+
+    http.Response response = await http.put(
+          '$url/customers/updateCustomer?token=${data['token']}',
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode({
+            "id": '${data['id']}',
+            "firstName": '$firstName',
+            "lastName": "$lastName",
+            "mobileNo": "$mobileNo",
+            "email": "$email",
+            "address": "",
+          })
+      );
+      var res = json.decode(response.body);
+
+      if(res['error'] != null){
+        Fluttertoast.showToast(
+          msg: "${res['error']['message']}",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+        );
+      }
+      else{
+        data['firstName'] = res['firstName'];
+        data['lastName'] = res['lastName'];
+        data['mobileNo'] = res['mobileNo'];
+        data['email'] = res['email'];
+
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.clear();
+        prefs.setString('data', json.encode(data));
+
+        Fluttertoast.showToast(
+          msg: "Successfully Updated",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+        );
+      }
+  }
+
 }
