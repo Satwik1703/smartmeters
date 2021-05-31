@@ -14,7 +14,7 @@ class PrepaidCard extends StatelessWidget {
     var size_2 = MediaQuery.of(context).size.height * 0.025;
 
     return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.20,
+      height: (MediaQuery.of(context).size.height > 600) ? MediaQuery.of(context).size.height * 0.2 : MediaQuery.of(context).size.height * 0.23,
       // width: MediaQuery.of(context).size.width * 0.2,
       child: Card(
         margin: EdgeInsets.only(left: 10.0, right: 10.0),
@@ -168,7 +168,7 @@ class PostPaid extends StatelessWidget {
     var size_2 = MediaQuery.of(context).size.height * 0.025;
 
     return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.20,
+      height: (MediaQuery.of(context).size.height > 600) ? MediaQuery.of(context).size.height * 0.2 : MediaQuery.of(context).size.height * 0.23,
       // width: MediaQuery.of(context).size.width * 0.2,
       child: Card(
         margin: EdgeInsets.only(left: 10.0, right: 10.0),
@@ -326,7 +326,7 @@ class PrePost extends StatelessWidget {
       keepScrollOffset: true,
     );
     return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.2,
+      height: (MediaQuery.of(context).size.height > 600) ? MediaQuery.of(context).size.height * 0.2 : MediaQuery.of(context).size.height * 0.23,
       child: Card(
         margin: EdgeInsets.only(left: 10.0, right: 10.0),
         elevation: 4,

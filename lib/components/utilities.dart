@@ -117,7 +117,6 @@ class _UtilityState extends State<Utility> {
     if(updTime.toString().length < 2){
       updTime = 'N/A';
     }
-    print(widget.updateTime.toString());
 
     List<TableRow> tableData;
     List<TableRow> getTableData() {
@@ -136,13 +135,6 @@ class _UtilityState extends State<Utility> {
                 child: Text('Date', style: TextStyle(fontWeight: FontWeight.bold),),
               ),
             ),
-            // Container(
-            //   color: Color.fromRGBO(255, 242, 232, 1),
-            //   child: Padding(
-            //     padding: const EdgeInsets.all(8.0),
-            //     child: Text('Usage', style: TextStyle(fontWeight: FontWeight.bold),),
-            //   ),
-            // ),
             Container(
               color: Color.fromRGBO(255, 242, 232, 1),
               child: Padding(
@@ -316,24 +308,31 @@ class _UtilityState extends State<Utility> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Container(  //Left Container
-                                child: Row(
-                                  children: [
-                                    SvgPicture.asset('assets/${widget.icon}', height: 55, width: 55,),
-                                    SizedBox(width: 10.0,),
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        AutoSizeText('${widget.name}', maxLines: 1, maxFontSize: 24.0, minFontSize: 20.0, style: TextStyle(fontWeight: FontWeight.bold),),
-                                        SizedBox(height: 5.0,),
-                                        AutoSizeText('${widget.currentUnits}  $updTime')
-                                      ],
-                                    )
-                                  ],
+                              Expanded(
+                                flex: 7,
+                                child: Container(  //Left Container
+                                  child: Row(
+                                    children: [
+                                      SvgPicture.asset('assets/${widget.icon}', height: 55, width: 55,),
+                                      SizedBox(width: 10.0,),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            AutoSizeText('${widget.name}', maxLines: 1, maxFontSize: 24.0, minFontSize: 2.0, style: TextStyle(fontWeight: FontWeight.bold),),
+                                            SizedBox(height: 5.0,),
+                                            AutoSizeText('${widget.currentUnits}  $updTime', minFontSize: 2, maxLines: 1,)
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ),
                               Expanded(
+                                flex: 3,
                                 child: Container(  //Right Container
+                                  width: double.infinity,
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -343,9 +342,10 @@ class _UtilityState extends State<Utility> {
                                               : (Provider.of<Data>(context).data['customerflatData'][flatIndex]['projectData']['projectUtilityType'] == 1001) ? 'Postpaid'
                                               : 'Prepaid-Postpaid',
                                         maxLines: 1,
+                                        minFontSize: 2,
                                       ),
                                       SizedBox(height: 7.0,),
-                                      AutoSizeText('${Provider.of<Data>(context).dashboardData['meterdata']['${widget.short}Tarif']} INR/${widget.units}')
+                                      AutoSizeText('${Provider.of<Data>(context).dashboardData['meterdata']['${widget.short}Tarif']} INR/${widget.units}', maxLines: 1, minFontSize: 2,)
                                     ],
                                   ),
                                 ),
@@ -379,7 +379,7 @@ class _UtilityState extends State<Utility> {
                               isVisible: false,
                               majorGridLines: MajorGridLines(width: 0),
                               minorGridLines: MinorGridLines(width: 0),
-                              labelFormat: '{value} INR',
+                              labelFormat: '{value} ${widget.units}',
                             ),
                             zoomPanBehavior: ZoomPanBehavior(enablePanning: true),
 
@@ -392,8 +392,11 @@ class _UtilityState extends State<Utility> {
                               ColumnSeries(
                                 dataSource: Provider.of<Data>(context).chartData,
 
-                                xValueMapper: (SalesData sales, _) => sales.year + "\n${sales.units} ${widget.units}",
-                                yValueMapper: (SalesData sales, _) => sales.sales,
+                                // xValueMapper: (SalesData sales, _) => sales.year + "\n${sales.units} ${widget.units}",
+                                // yValueMapper: (SalesData sales, _) => sales.sales,
+
+                                xValueMapper: (SalesData sales, _) => sales.year + "\n${sales.sales} INR",
+                                yValueMapper: (SalesData sales, _) => sales.units,
 
                                 borderRadius: BorderRadius.all(Radius.circular(8.0)),
                                 color: Color.fromRGBO(247, 123, 37, 1),

@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:smart_meter/components/dashboard.dart';
 import 'package:smart_meter/components/transactions.dart';
 import 'package:smart_meter/data.dart';
+import 'package:smart_meter/screens/notifications.dart';
 import 'package:smart_meter/screens/settings.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -25,12 +26,14 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Widget> topWidgets = <Widget>[
     TestRow(),
     TestRow(),
+    // TopRow(),
     // Container(height: 0,),
   ];
 
   List<Widget> widgets = <Widget>[
     Dashboard(),
     Transactions(),
+    // Notifications(),
     // Settings(),
   ];
 
@@ -53,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     var navBarHeight = kBottomNavigationBarHeight * 0.7;
     var navBarWidth = 0.7;
-    // var navBarWidth = 0.9;
+    // var navBarWidth = 0.95;
 
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
@@ -62,6 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
         items: [
           bottomNavigationBarItem(navBarWidth, navBarHeight, 0, 'dashboard', 'Dashboard'),
           bottomNavigationBarItem(navBarWidth, navBarHeight, 1, 'transactions', 'Transactions'),
+          // bottomNavigationBarItem(navBarWidth, navBarHeight, 2, 'notifications', 'Notifications'),
           // bottomNavigationBarItem(navBarWidth, navBarHeight, 2, 'settings_bottom_bar', 'Settings'),
         ],
         currentIndex: index,
@@ -96,9 +100,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    SizedBox(width: 6.0),
                     SvgPicture.asset('assets/$image.svg', color: Colors.white,),
                     SizedBox(width: 4.0),
-                    Text('$label', style: TextStyle(color: Colors.white),),
+                    Expanded(child: AutoSizeText('$label', style: TextStyle(color: Colors.white), maxLines: 1, minFontSize: 2,)),
                   ],
                 ),
               )
@@ -119,7 +124,7 @@ class TestRow extends StatelessWidget {
     var flatIndex = Provider.of<Data>(context).flatIndex;
     var noOfFlats = new List<int>.generate(Provider.of<Data>(context, listen: false).data['customerflatData'].length, (i) => i + 1);
     return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.22,
+      height: (MediaQuery.of(context).size.height > 600) ? MediaQuery.of(context).size.height * 0.22 : MediaQuery.of(context).size.height * 0.3,
       width: double.infinity,
       child: CarouselSlider(
         options: CarouselOptions(

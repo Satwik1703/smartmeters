@@ -79,7 +79,7 @@ class TransPreCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.15,
+      height: MediaQuery.of(context).size.height * 0.175,
       child: Card(
         margin: EdgeInsets.only(left: 10.0, right: 10.0),
         elevation: 4,
@@ -173,7 +173,7 @@ class TransPrePost extends StatelessWidget {
     var size_2 = MediaQuery.of(context).size.height * 0.025;
 
     return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.15,
+      height: MediaQuery.of(context).size.height * 0.175,
       child: Card(
         margin: EdgeInsets.only(left: 10.0, right: 10.0),
         elevation: 4,
@@ -334,7 +334,7 @@ class TransPostCard extends StatelessWidget {
     nowDate = new DateTime(nowDate.year, nowDate.month-1, nowDate.day);
 
     return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.15,
+      height: MediaQuery.of(context).size.height * 0.175,
       child: Card(
         margin: EdgeInsets.only(left: 10.0, right: 10.0),
         elevation: 4,
