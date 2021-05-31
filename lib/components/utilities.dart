@@ -189,7 +189,7 @@ class _UtilityState extends State<Utility> {
                 child: Row(
                   children: [
                     Text('${object[widget.short]}'),
-                    (object['${widget.short}Arrow'] == "1") ? Icon(Icons.arrow_upward, color: Colors.green, size: size1,) : Icon(Icons.arrow_downward, color: Colors.red, size: size1,),
+                    (object['${widget.short}Arrow'] == "1") ? Icon(Icons.arrow_upward, color: Colors.red, size: size1,) : Icon(Icons.arrow_downward, color: Colors.green, size: size1,),
                   ],
                 ),
               ),
@@ -345,7 +345,8 @@ class _UtilityState extends State<Utility> {
                                         minFontSize: 2,
                                       ),
                                       SizedBox(height: 7.0,),
-                                      AutoSizeText('${Provider.of<Data>(context).dashboardData['meterdata']['${widget.short}Tarif']} INR/${widget.units}', maxLines: 1, minFontSize: 2,)
+                                      // AutoSizeText('${Provider.of<Data>(context).dashboardData['meterdata']['${widget.short}Tarif']} INR/${widget.units}', maxLines: 1, minFontSize: 2,)
+                                      AutoSizeText(' ', maxLines: 1, minFontSize: 2,)
                                     ],
                                   ),
                                 ),

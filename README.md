@@ -1,16 +1,12 @@
 # smart_meter
 
-A new Flutter application.
+## V1.9.7
 
-## Getting Started
+- Reversed the Arrow colors in the grid view of Utility
+- Removed the Tarrif Rate on the Bottom sheet since the tarrif is based on slab.
 
-This project is a starting point for a Flutter application.
+## V1.9.6
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Made the App compatible with 4'inch screens
+- Reversed the plot of (Cost vs Time) with (Consumed Units vs Time)
+- Jira Ticket => https://pert-automation.atlassian.net/browse/WHE-374?atlOrigin=eyJpIjoiZmI2MjMxNjhhY2QxNDY5ZWFlZTBjY2M5NGZkNjJjYTYiLCJwIjoiaiJ9
