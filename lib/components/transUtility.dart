@@ -768,6 +768,7 @@ class TransInvoice extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     var size_2 = MediaQuery.of(context).size.width * 0.05;
     var icon = 'invoice';
 
@@ -781,7 +782,6 @@ class TransInvoice extends StatelessWidget {
     else{
       time = "${data['createdAt'].toString().substring(11, 16)} pm";
     }
-
     return RawMaterialButton(
       onPressed: (){
         showModalBottomSheet(

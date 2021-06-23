@@ -125,11 +125,7 @@ class PrepaidCard extends StatelessWidget {
                     padding: const EdgeInsets.only(left: 15, top: 10, bottom: 10, right: 30),
                     child: GestureDetector(
                       onTap: (){
-                        Fluttertoast.showToast(
-                          msg: "Please Contact Admin for Payments",
-                          toastLength: Toast.LENGTH_LONG,
-                          gravity: ToastGravity.BOTTOM,
-                        );
+                        Provider.of<Data>(context, listen: false).paymentGateway(context);
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -279,11 +275,7 @@ class PostPaid extends StatelessWidget {
                     padding: const EdgeInsets.only(left: 15, top: 10, bottom: 10, right: 30),
                     child: GestureDetector(
                       onTap: (){
-                        Fluttertoast.showToast(
-                          msg: "Please Contact Admin for Payments",
-                          toastLength: Toast.LENGTH_LONG,
-                          gravity: ToastGravity.BOTTOM,
-                        );
+                        Provider.of<Data>(context, listen: false).paymentGateway();
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -312,10 +304,6 @@ class PostPaid extends StatelessWidget {
 }
 
 class PrePost extends StatelessWidget {
-  const PrePost({
-    Key key,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     var size_1 = MediaQuery.of(context).size.height * 0.013;
@@ -448,11 +436,7 @@ class PrePost extends StatelessWidget {
                             padding: const EdgeInsets.only(left: 20),
                             child: GestureDetector(
                               onTap: (){
-                                Fluttertoast.showToast(
-                                  msg: "Please Contact Admin for Payments",
-                                  toastLength: Toast.LENGTH_LONG,
-                                  gravity: ToastGravity.BOTTOM,
-                                );
+                                Provider.of<Data>(context, listen: false).paymentGateway(context);
                               },
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -470,11 +454,7 @@ class PrePost extends StatelessWidget {
                             padding: const EdgeInsets.only(left: 25),
                             child: GestureDetector(
                               onTap: (){
-                                Fluttertoast.showToast(
-                                  msg: "Please Contact Admin for Payments",
-                                  toastLength: Toast.LENGTH_LONG,
-                                  gravity: ToastGravity.BOTTOM,
-                                );
+                                Provider.of<Data>(context, listen: false).paymentGateway();
                               },
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -497,3 +477,5 @@ class PrePost extends StatelessWidget {
     );
   }
 }
+
+

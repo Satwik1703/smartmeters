@@ -71,8 +71,8 @@ class _TransactionsListState extends State<TransactionsList> {
                 itemBuilder: (context, ind){
                   return (Provider.of<Data>(context).transactions[index][ind]['Description'] == 'Invoice')
                       ? TransInvoice(data: Provider.of<Data>(context).transactions[index][ind], flatIndex: flatIndex,)
-                      : (Provider.of<Data>(context).transactions[index][ind]['Description'] == 'Payment') ?
-                        TransPayment(data: Provider.of<Data>(context).transactions[index][ind], flatIndex: flatIndex,)
+                      : (Provider.of<Data>(context).transactions[index][ind]['Description'] == 'Payment')
+                        ? TransPayment(data: Provider.of<Data>(context).transactions[index][ind], flatIndex: flatIndex,)
                         : TransUtility(data: Provider.of<Data>(context).transactions[index][ind], flatIndex: flatIndex,);
                 },
               )

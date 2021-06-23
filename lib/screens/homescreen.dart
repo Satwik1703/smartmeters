@@ -46,10 +46,10 @@ class _HomeScreenState extends State<HomeScreen> {
   void loadTransactions() async {
     await Permission.storage.request();
 
-    WidgetsFlutterBinding.ensureInitialized();
-    await FlutterDownloader.initialize(
-        debug: true // optional: set false to disable printing logs to console
-    );
+    // WidgetsFlutterBinding.ensureInitialized();
+    // await FlutterDownloader.initialize(
+    //     debug: true // optional: set false to disable printing logs to console
+    // );
   }
 
   @override

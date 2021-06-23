@@ -1,5 +1,9 @@
 import 'dart:convert';
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/services.dart';
 import 'dart:io' show Platform, stdout;
+import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
@@ -7,12 +11,13 @@ import 'package:path_provider/path_provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 import 'components/utilities.dart';
 
 class Data extends ChangeNotifier {
-  // var url = 'http://18.136.149.198:3074/api'; //Dev url
-  var url = 'http://65.1.28.192:3074/api';  //Production url
+  var url = 'http://18.136.149.198:3074/api'; //Dev url
+  // var url = 'http://65.1.28.192:3074/api';  //Production url
 
   var mobile_number = '';
   var otp = '';
@@ -32,6 +37,8 @@ class Data extends ChangeNotifier {
   var start;
   var end;
   var consumed;
+  var rechargeAmt = 0.0;
+  var paymentRunning = false;
 
   var date = new DateTime.now().toString();
   var dateParse;
@@ -378,7 +385,7 @@ class Data extends ChangeNotifier {
   }
 
   String getMonthName(month) {
-    var monthArray = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    var monthArray = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December', '    '];
     month = int.parse(month);
     return monthArray[month-1];
   }
@@ -571,6 +578,296 @@ class Data extends ChangeNotifier {
           gravity: ToastGravity.BOTTOM,
         );
       }
+  }
+
+  void _handlePaymentSuccess(PaymentSuccessResponse response) async{
+    Fluttertoast.showToast(
+      msg: "Payment Successful",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+    );
+
+    paymentRunning = false;
+    await refreshData();
+    await refreshTransactions();
+  }
+
+  void _handlePaymentError(PaymentFailureResponse response) async{
+    Fluttertoast.showToast(
+      msg: "Payment Failed. Please try again",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+    );
+
+    paymentRunning = false;
+    await refreshData();
+    await refreshTransactions();
+  }
+
+  Future<void> showModal(BuildContext ctx) {
+    final _controller = TextEditingController();
+
+    showModalBottomSheet(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+      isScrollControlled: true,
+      elevation: 10,
+      backgroundColor: Colors.white,
+      context: ctx,
+      builder: (ctx) => Padding(
+        padding: EdgeInsets.symmetric(horizontal:18 ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(height: 25.0,),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 2.0),
+              child: Text('Enter the Recharge Amount', style: TextStyle(fontSize: 18.0),),
+            ),
+            SizedBox(height: 10.0,),
+            Padding(
+              padding: EdgeInsets.only(bottom: MediaQuery.of(ctx).viewInsets.bottom, right: MediaQuery.of(ctx).size.width*0.1),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextField(
+                    decoration: InputDecoration(
+                      hintText: 'Amount',
+                      hintStyle: TextStyle(color: Color(0xFFF77C25), fontSize: 12.0),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Color(0xFFF77C25)),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Color(0xFFF77C25)),
+                      ),
+                      border: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Color(0xFFF77C25)),
+                      ),
+                    ),
+                    cursorColor: Color(0xFFF77C25),
+                    autofocus: true,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      WhitelistingTextInputFormatter(RegExp(r"^\d+\.?\d{0,2}"))
+                    ],
+                    onChanged: (value){},
+                    // onSubmitted: (value){
+                    //   if(value != ""){
+                    //     if(double.parse(value) < 100.0){
+                    //       Fluttertoast.showToast(
+                    //         msg: "Minimum Amount must be Rs 100",
+                    //         toastLength: Toast.LENGTH_SHORT,
+                    //         gravity: ToastGravity.BOTTOM,
+                    //       );
+                    //       return;
+                    //     }
+                    //     rechargeAmt = double.parse(value);
+                    //     Navigator.pop(ctx);
+                    //   }
+                    // },
+                    controller: _controller,
+                    onEditingComplete: (){
+                      var value = _controller.text;
+                      if(value != ""){
+                        if(double.parse(value) < 100.0){
+                          Fluttertoast.showToast(
+                            msg: "Minimum Amount must be Rs 100",
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                          );
+                          return;
+                        }
+                        rechargeAmt = double.parse(value);
+                        Navigator.pop(ctx);
+                      }
+                    },
+                  ),
+                  SizedBox(height: 15.0,),
+                  AutoSizeText('* Payment gateway handling fee of ${data['customerflatData'][flatIndex]['projectData']['paymentGatewayCharge']}% is charged additionally', maxLines: 1, minFontSize: 2.0, textAlign: TextAlign.start,),
+                ],
+              ),
+            ),
+            SizedBox(height: 20.0,),
+          ],
+        ),
+
+      )
+    ).then((value) async{
+      if(rechargeAmt == 0.0) return;
+
+      var amount = (rechargeAmt * 100).toInt();
+      http.Response response = await http.post(
+        '$url/payments/createRechargeOrder?token=${data['token']}',
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode({
+          "amount": amount,
+          "flatId": "${data['customerflatData'][flatIndex]['flatId']}",
+          "paymentId": "${data['customerflatData'][flatIndex]['projectData']['paymentGatewyId']}",
+          "paymentSecret": "${data['customerflatData'][flatIndex]['projectData']['paymentGatewySecret']}",
+          "paymentCharges": data['customerflatData'][flatIndex]['projectData']['paymentGatewayCharge']
+        })
+      );
+      var res = json.decode(response.body);
+      rechargeAmt = 0.0;
+      print(res);
+
+      if(res['error'] != null){
+        if(res['error']['error'] != null){
+          Fluttertoast.showToast(
+            msg: "${res['error']['error']['description']}",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+          );
+          return;
+        }
+        else{
+          Fluttertoast.showToast(
+            msg: "${res['error']['message']}",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+          );
+          return;
+        }
+      }
+
+      var _razorpay = Razorpay();
+      _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+      _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+      var options = {
+      'key': 'rzp_test_ITxbvBezOt6Qg8',
+      'amount': amount,
+      'name': 'Pert InfoConsulting',
+      'description': '${data['customerflatData'][flatIndex]['projectData']['name']}',
+      'order_id': res['id'],
+      'timeout': 60*5, // in seconds
+      'prefill': {
+        'contact': (data['mobileNo'] != null) ? '${data['mobileNo']}' : "",
+        'email': (data['email'] != null) ? '${data['email']}' : "",
+        }
+      };
+
+      try{
+        _razorpay.open(options);
+      }
+      catch (e){
+        print('!--');
+        print(e);
+      }
+    });
+  }
+
+  void paymentGateway([context]) async{
+    if(context != null){
+      try {
+        final result = await InternetAddress.lookup('google.com');
+        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+          await showModal(context);
+        }
+      } on SocketException catch (_) {
+        Fluttertoast.showToast(
+          msg: "Please Check Your Internet Connection",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+        );
+      }
+    }
+    else{
+      if(paymentRunning){
+        return;
+      }
+      paymentRunning = true;
+      try {
+        final result = await InternetAddress.lookup('google.com');
+        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        }
+      } on SocketException catch (_) {
+        Fluttertoast.showToast(
+          msg: "Please Check Your Internet Connection",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+        );
+        paymentRunning = false;
+        return;
+      }
+
+
+      var number = dashboardData['postpaiddata']['remainingAmount'].toString();
+      if(number == "" || double.parse(number) < 100.0){
+        Fluttertoast.showToast(
+          msg: "Minimum Amount should be Rs 100",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+        );
+        paymentRunning = false;
+        return;
+      }
+      var amount = (number != "") ? (double.parse(number)*100).toInt() : 10000;
+      var invoiceNo = (dashboardData['postpaiddata']['invoiceNo'] != null) ? dashboardData['postpaiddata']['invoiceNo'] : "";
+
+      http.Response response = await http.post(
+          '$url/payments/createBillOrder?token=${data['token']}',
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode({
+            "amount": amount,
+            "invoiceNo": invoiceNo,
+            "partial_payment": true,
+            "paymentId": "${data['customerflatData'][flatIndex]['projectData']['paymentGatewyId']}",
+            "paymentSecret": "${data['customerflatData'][flatIndex]['projectData']['paymentGatewySecret']}",
+            "paymentCharges": 2,
+          })
+      );
+      var res = json.decode(response.body);
+
+      if(res['error'] != null){
+        paymentRunning = false;
+        if(res['error']['error'] != null){
+          Fluttertoast.showToast(
+            msg: "${res['error']['error']['description']}",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+          );
+          return;
+        }
+        else{
+          Fluttertoast.showToast(
+            msg: "${res['error']['message']}",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+          );
+          return;
+        }
+      }
+
+      var _razorpay = Razorpay();
+      _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+      _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+      var options = {
+        'key': 'rzp_test_ITxbvBezOt6Qg8',
+        'amount': amount,
+        'name': 'Pert InfoConsulting',
+        'description': '${data['customerflatData'][flatIndex]['projectData']['name']}',
+        'order_id': res['id'],
+        'timeout': 60*5, // in seconds
+        'prefill': {
+          'contact': (data['mobileNo'] != null) ? '${data['mobileNo']}' : "",
+          'email': (data['email'] != null) ? '${data['email']}' : "",
+        }
+      };
+
+      try{
+        _razorpay.open(options);
+      }
+      catch (e){
+        paymentRunning = false;
+        print(e);
+      }
+    }
   }
 
 }

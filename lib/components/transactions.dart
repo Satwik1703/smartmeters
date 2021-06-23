@@ -135,11 +135,7 @@ class TransPreCard extends StatelessWidget {
                         ),
                         GestureDetector(
                           onTap: (){
-                            Fluttertoast.showToast(
-                              msg: "Please Contact Admin for Payments",
-                              toastLength: Toast.LENGTH_LONG,
-                              gravity: ToastGravity.BOTTOM,
-                            );
+                            Provider.of<Data>(context, listen: false).paymentGateway(context);
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -268,11 +264,7 @@ class TransPrePost extends StatelessWidget {
                             padding: const EdgeInsets.only(left: 20),
                             child: GestureDetector(
                               onTap: (){
-                                Fluttertoast.showToast(
-                                  msg: "Please Contact Admin for Payments",
-                                  toastLength: Toast.LENGTH_LONG,
-                                  gravity: ToastGravity.BOTTOM,
-                                );
+                                Provider.of<Data>(context, listen: false).paymentGateway(context);
                               },
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -290,11 +282,7 @@ class TransPrePost extends StatelessWidget {
                             padding: const EdgeInsets.only(left: 25),
                             child: GestureDetector(
                               onTap: (){
-                                Fluttertoast.showToast(
-                                  msg: "Please Contact Admin for Payments",
-                                  toastLength: Toast.LENGTH_LONG,
-                                  gravity: ToastGravity.BOTTOM,
-                                );
+                                Provider.of<Data>(context, listen: false).paymentGateway();
                               },
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -390,11 +378,7 @@ class TransPostCard extends StatelessWidget {
                           ),
                           GestureDetector(
                             onTap: (){
-                              Fluttertoast.showToast(
-                                msg: "Please Contact Admin for Payments",
-                                toastLength: Toast.LENGTH_LONG,
-                                gravity: ToastGravity.BOTTOM,
-                              );
+                              Provider.of<Data>(context, listen: false).paymentGateway();
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
