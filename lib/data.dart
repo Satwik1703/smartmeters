@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:custom_radio_grouped_button/CustomButtons/CustomRadioButton.dart';
+import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:flutter/services.dart';
 import 'dart:io' show Platform, stdout;
 import 'dart:io';
@@ -38,7 +40,7 @@ class Data extends ChangeNotifier {
   var end;
   var consumed;
   var rechargeAmt = 0.0;
-  var paymentRunning = false;
+  var invoicePay = "full";
 
   var date = new DateTime.now().toString();
   var dateParse;
@@ -587,7 +589,6 @@ class Data extends ChangeNotifier {
       gravity: ToastGravity.BOTTOM,
     );
 
-    paymentRunning = false;
     await refreshData();
     await refreshTransactions();
   }
@@ -599,7 +600,6 @@ class Data extends ChangeNotifier {
       gravity: ToastGravity.BOTTOM,
     );
 
-    paymentRunning = false;
     await refreshData();
     await refreshTransactions();
   }
@@ -653,20 +653,6 @@ class Data extends ChangeNotifier {
                       WhitelistingTextInputFormatter(RegExp(r"^\d+\.?\d{0,2}"))
                     ],
                     onChanged: (value){},
-                    // onSubmitted: (value){
-                    //   if(value != ""){
-                    //     if(double.parse(value) < 100.0){
-                    //       Fluttertoast.showToast(
-                    //         msg: "Minimum Amount must be Rs 100",
-                    //         toastLength: Toast.LENGTH_SHORT,
-                    //         gravity: ToastGravity.BOTTOM,
-                    //       );
-                    //       return;
-                    //     }
-                    //     rechargeAmt = double.parse(value);
-                    //     Navigator.pop(ctx);
-                    //   }
-                    // },
                     controller: _controller,
                     onEditingComplete: (){
                       var value = _controller.text;
@@ -713,7 +699,6 @@ class Data extends ChangeNotifier {
       );
       var res = json.decode(response.body);
       rechargeAmt = 0.0;
-      print(res);
 
       if(res['error'] != null){
         if(res['error']['error'] != null){
@@ -738,7 +723,7 @@ class Data extends ChangeNotifier {
       _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
       _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
       var options = {
-      'key': 'rzp_test_ITxbvBezOt6Qg8',
+      'key': '${data['customerflatData'][flatIndex]['projectData']['paymentGatewyId']}',
       'amount': amount,
       'name': 'Pert InfoConsulting',
       'description': '${data['customerflatData'][flatIndex]['projectData']['name']}',
@@ -760,12 +745,233 @@ class Data extends ChangeNotifier {
     });
   }
 
-  void paymentGateway([context]) async{
-    if(context != null){
-      try {
+  Future<void> showPayModal(BuildContext ctx){
+    final _controller = TextEditingController();
+    _controller.text = dashboardData['postpaiddata']['remainingAmount'].toString();
+    final textFocus = new FocusNode();
+
+    showModalBottomSheet(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+      isScrollControlled: true,
+      elevation: 10,
+      backgroundColor: Colors.white,
+      context: ctx,
+      builder: (ctx) => StatefulBuilder(
+        builder: (BuildContext ctx, StateSetter setState){
+          return Padding(
+          padding: EdgeInsets.symmetric(horizontal:18 ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(height: 25.0,),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 2.0),
+                child: CustomRadioButton(
+                  elevation: 0,
+                  absoluteZeroSpacing: false,
+                  enableShape: true,
+                  unSelectedColor: Colors.white,
+                  selectedBorderColor: Color(0xFFF77C25),
+                  unSelectedBorderColor: Color(0xFFF77C25),
+                  defaultSelected: 'full',
+                  buttonLables: [
+                    'Full',
+                    'Partial',
+                  ],
+                  buttonValues: [
+                    "full",
+                    "partial",
+                  ],
+                  buttonTextStyle: ButtonTextStyle(
+                      selectedColor: Colors.white,
+                      unSelectedColor: Colors.black,
+                      textStyle: TextStyle(fontSize: 16)),
+                  radioButtonValue: (value) async{
+                    invoicePay = value;
+                    setState(() {
+                      invoicePay = value;
+                    });
+                    notifyListeners();
+
+                    if(value == 'full'){
+                      _controller.text = dashboardData['postpaiddata']['remainingAmount'].toString();
+                    }
+                    else{
+                      _controller.text = "";
+                      await Future.delayed(Duration(milliseconds: 200));
+                      FocusScope.of(ctx).requestFocus(textFocus);
+                    }
+                  },
+                  selectedColor: Color(0xFFF77C25),
+                ),
+              ),
+              SizedBox(height: 10.0,),
+              Padding(
+                padding: EdgeInsets.only(bottom: MediaQuery.of(ctx).viewInsets.bottom),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: double.infinity,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            flex: 8,
+                            child: TextField(
+                              focusNode: textFocus,
+                              decoration: InputDecoration(
+                                hintText: 'Amount',
+                                hintStyle: TextStyle(color: Color(0xFFF77C25), fontSize: 12.0),
+                                enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Color(0xFFF77C25)),
+                                ),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Color(0xFFF77C25)),
+                                ),
+                                border: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Color(0xFFF77C25)),
+                                ),
+                              ),
+                              cursorColor: Color(0xFFF77C25),
+                              autofocus: true,
+                              keyboardType: TextInputType.number,
+                              inputFormatters: [
+                                WhitelistingTextInputFormatter(RegExp(r"^\d+\.?\d{0,2}"))
+                              ],
+                              enabled: (invoicePay == 'partial'),
+                              onChanged: (value){},
+                              controller: _controller,
+                            ),
+                          ),
+                          Expanded(
+                            flex: 2,
+                            child: TextButton(
+                              onPressed: () async{
+                                if(_controller.text == "" || double.parse(_controller.text) < 100.0){
+                                  Fluttertoast.showToast(
+                                    msg: "Minimum Amount should be Rs 100",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.BOTTOM,
+                                  );
+                                  return;
+                                }
+                                var number = (dashboardData['postpaiddata']['remainingAmount'].toString() != "") ? double.parse(dashboardData['postpaiddata']['remainingAmount'].toString()) : 0.0;
+                                if(double.parse(_controller.text) > number){
+                                  Fluttertoast.showToast(
+                                    msg: "Amount should be less than Invoice Amount",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.BOTTOM,
+                                  );
+                                  return;
+                                }
+
+                                var amount = (double.parse(_controller.text)*100).toInt();
+                                var invoiceNo = (dashboardData['postpaiddata']['invoiceNo'] != null) ? dashboardData['postpaiddata']['invoiceNo'] : "";
+
+                                http.Response response = await http.post(
+                                    '$url/payments/createBillOrder?token=${data['token']}',
+                                    headers: <String, String>{
+                                      'Content-Type': 'application/json; charset=UTF-8',
+                                    },
+                                    body: jsonEncode({
+                                      "amount": amount,
+                                      "invoiceNo": invoiceNo,
+                                      "partial_payment": false,
+                                      "paymentId": "${data['customerflatData'][flatIndex]['projectData']['paymentGatewyId']}",
+                                      "paymentSecret": "${data['customerflatData'][flatIndex]['projectData']['paymentGatewySecret']}",
+                                      "paymentCharges": data['customerflatData'][flatIndex]['projectData']['paymentGatewayCharge'],
+                                    })
+                                );
+                                var res = json.decode(response.body);
+
+                                if(res['error'] != null){
+                                  if(res['error']['error'] != null){
+                                    Fluttertoast.showToast(
+                                      msg: "${res['error']['error']['description']}",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                    );
+                                    return;
+                                  }
+                                  else{
+                                    Fluttertoast.showToast(
+                                      msg: "${res['error']['message']}",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                    );
+                                    return;
+                                  }
+                                }
+
+                                Navigator.pop(ctx);
+                                var _razorpay = Razorpay();
+                                _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+                                _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+                                var options = {
+                                  'key': '${data['customerflatData'][flatIndex]['projectData']['paymentGatewyId']}',
+                                  'amount': amount,
+                                  'name': 'Pert InfoConsulting',
+                                  'description': '${data['customerflatData'][flatIndex]['projectData']['name']}',
+                                  'order_id': res['id'],
+                                  'timeout': 60*5, // in seconds
+                                  'prefill': {
+                                    'contact': (data['mobileNo'] != null) ? '${data['mobileNo']}' : "",
+                                    'email': (data['email'] != null) ? '${data['email']}' : "",
+                                  }
+                                };
+
+                                try{
+                                  _razorpay.open(options);
+                                }
+                                catch (e){
+                                  print(e);
+                                }
+                              },
+                              style: ButtonStyle(overlayColor: MaterialStateProperty.all(Color.fromRGBO(247, 124, 37, 0.5))),
+                              child: Container(
+                                width: double.infinity,
+                                height: 40.0,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                                  color: Colors.white,
+                                ),
+                                child: Center(child: AutoSizeText('Go', style: TextStyle(color: Color(0xFFF77C25)),))
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 15.0,),
+                    AutoSizeText('* Payment gateway handling fee of ${data['customerflatData'][flatIndex]['projectData']['paymentGatewayCharge']}% is charged additionally', maxLines: 1, minFontSize: 2.0, textAlign: TextAlign.start,),
+                  ],
+                ),
+              ),
+              SizedBox(height: 20.0,),
+            ],
+          ),
+        );
+        }
+      )
+    ).then((value) async{
+      invoicePay = 'full';
+    });
+  }
+
+  void paymentGateway(context, flag) async{
+    try {
         final result = await InternetAddress.lookup('google.com');
         if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-          await showModal(context);
+          if(!flag){
+            await showModal(context);
+          }
+          else{
+            await showPayModal(context);
+          }
         }
       } on SocketException catch (_) {
         Fluttertoast.showToast(
@@ -774,100 +980,107 @@ class Data extends ChangeNotifier {
           gravity: ToastGravity.BOTTOM,
         );
       }
-    }
-    else{
-      if(paymentRunning){
-        return;
-      }
-      paymentRunning = true;
-      try {
-        final result = await InternetAddress.lookup('google.com');
-        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        }
-      } on SocketException catch (_) {
-        Fluttertoast.showToast(
-          msg: "Please Check Your Internet Connection",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-        );
-        paymentRunning = false;
-        return;
-      }
 
-
-      var number = dashboardData['postpaiddata']['remainingAmount'].toString();
-      if(number == "" || double.parse(number) < 100.0){
-        Fluttertoast.showToast(
-          msg: "Minimum Amount should be Rs 100",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-        );
-        paymentRunning = false;
-        return;
-      }
-      var amount = (number != "") ? (double.parse(number)*100).toInt() : 10000;
-      var invoiceNo = (dashboardData['postpaiddata']['invoiceNo'] != null) ? dashboardData['postpaiddata']['invoiceNo'] : "";
-
-      http.Response response = await http.post(
-          '$url/payments/createBillOrder?token=${data['token']}',
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-          },
-          body: jsonEncode({
-            "amount": amount,
-            "invoiceNo": invoiceNo,
-            "partial_payment": true,
-            "paymentId": "${data['customerflatData'][flatIndex]['projectData']['paymentGatewyId']}",
-            "paymentSecret": "${data['customerflatData'][flatIndex]['projectData']['paymentGatewySecret']}",
-            "paymentCharges": 2,
-          })
-      );
-      var res = json.decode(response.body);
-
-      if(res['error'] != null){
-        paymentRunning = false;
-        if(res['error']['error'] != null){
-          Fluttertoast.showToast(
-            msg: "${res['error']['error']['description']}",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-          );
-          return;
-        }
-        else{
-          Fluttertoast.showToast(
-            msg: "${res['error']['message']}",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-          );
-          return;
-        }
-      }
-
-      var _razorpay = Razorpay();
-      _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
-      _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
-      var options = {
-        'key': 'rzp_test_ITxbvBezOt6Qg8',
-        'amount': amount,
-        'name': 'Pert InfoConsulting',
-        'description': '${data['customerflatData'][flatIndex]['projectData']['name']}',
-        'order_id': res['id'],
-        'timeout': 60*5, // in seconds
-        'prefill': {
-          'contact': (data['mobileNo'] != null) ? '${data['mobileNo']}' : "",
-          'email': (data['email'] != null) ? '${data['email']}' : "",
-        }
-      };
-
-      try{
-        _razorpay.open(options);
-      }
-      catch (e){
-        paymentRunning = false;
-        print(e);
-      }
-    }
+    // if(!flag){
+    //   try {
+    //     final result = await InternetAddress.lookup('google.com');
+    //     if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+    //       await showModal(context);
+    //     }
+    //   } on SocketException catch (_) {
+    //     Fluttertoast.showToast(
+    //       msg: "Please Check Your Internet Connection",
+    //       toastLength: Toast.LENGTH_SHORT,
+    //       gravity: ToastGravity.BOTTOM,
+    //     );
+    //   }
+    // }
+    // else{
+    //   try {
+    //     final result = await InternetAddress.lookup('google.com');
+    //     if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+    //     }
+    //   } on SocketException catch (_) {
+    //     Fluttertoast.showToast(
+    //       msg: "Please Check Your Internet Connection",
+    //       toastLength: Toast.LENGTH_SHORT,
+    //       gravity: ToastGravity.BOTTOM,
+    //     );
+    //     return;
+    //   }
+    //
+    //   await showPayModal(context);
+    //
+    //   // var number = dashboardData['postpaiddata']['remainingAmount'].toString();
+    //   // if(number == "" || double.parse(number) < 100.0){
+    //   //   Fluttertoast.showToast(
+    //   //     msg: "Minimum Amount should be Rs 100",
+    //   //     toastLength: Toast.LENGTH_SHORT,
+    //   //     gravity: ToastGravity.BOTTOM,
+    //   //   );
+    //   //   return;
+    //   // }
+    //   // var amount = (number != "") ? (double.parse(number)*100).toInt() : 10000;
+    //   // var invoiceNo = (dashboardData['postpaiddata']['invoiceNo'] != null) ? dashboardData['postpaiddata']['invoiceNo'] : "";
+    //   //
+    //   // http.Response response = await http.post(
+    //   //     '$url/payments/createBillOrder?token=${data['token']}',
+    //   //     headers: <String, String>{
+    //   //       'Content-Type': 'application/json; charset=UTF-8',
+    //   //     },
+    //   //     body: jsonEncode({
+    //   //       "amount": amount,
+    //   //       "invoiceNo": invoiceNo,
+    //   //       "partial_payment": true,
+    //   //       "paymentId": "${data['customerflatData'][flatIndex]['projectData']['paymentGatewyId']}",
+    //   //       "paymentSecret": "${data['customerflatData'][flatIndex]['projectData']['paymentGatewySecret']}",
+    //   //       "paymentCharges": 2,
+    //   //     })
+    //   // );
+    //   // var res = json.decode(response.body);
+    //   //
+    //   // if(res['error'] != null){
+    //   //   if(res['error']['error'] != null){
+    //   //     Fluttertoast.showToast(
+    //   //       msg: "${res['error']['error']['description']}",
+    //   //       toastLength: Toast.LENGTH_SHORT,
+    //   //       gravity: ToastGravity.BOTTOM,
+    //   //     );
+    //   //     return;
+    //   //   }
+    //   //   else{
+    //   //     Fluttertoast.showToast(
+    //   //       msg: "${res['error']['message']}",
+    //   //       toastLength: Toast.LENGTH_SHORT,
+    //   //       gravity: ToastGravity.BOTTOM,
+    //   //     );
+    //   //     return;
+    //   //   }
+    //   // }
+    //   //
+    //   // var _razorpay = Razorpay();
+    //   // _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    //   // _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+    //   // var options = {
+    //   //   'key': 'rzp_test_ITxbvBezOt6Qg8',
+    //   //   'amount': amount,
+    //   //   'name': 'Pert InfoConsulting',
+    //   //   'description': '${data['customerflatData'][flatIndex]['projectData']['name']}',
+    //   //   'order_id': res['id'],
+    //   //   'timeout': 60*5, // in seconds
+    //   //   'prefill': {
+    //   //     'contact': (data['mobileNo'] != null) ? '${data['mobileNo']}' : "",
+    //   //     'email': (data['email'] != null) ? '${data['email']}' : "",
+    //   //   }
+    //   // };
+    //   //
+    //   // try{
+    //   //   _razorpay.open(options);
+    //   // }
+    //   // catch (e){
+    //   //   print(e);
+    //   // }
+    // }
   }
 
 }

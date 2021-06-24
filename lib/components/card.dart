@@ -125,7 +125,7 @@ class PrepaidCard extends StatelessWidget {
                     padding: const EdgeInsets.only(left: 15, top: 10, bottom: 10, right: 30),
                     child: GestureDetector(
                       onTap: (){
-                        Provider.of<Data>(context, listen: false).paymentGateway(context);
+                        Provider.of<Data>(context, listen: false).paymentGateway(context, false);
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -275,7 +275,7 @@ class PostPaid extends StatelessWidget {
                     padding: const EdgeInsets.only(left: 15, top: 10, bottom: 10, right: 30),
                     child: GestureDetector(
                       onTap: (){
-                        Provider.of<Data>(context, listen: false).paymentGateway();
+                        Provider.of<Data>(context, listen: false).paymentGateway(context, true);
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -436,7 +436,7 @@ class PrePost extends StatelessWidget {
                             padding: const EdgeInsets.only(left: 20),
                             child: GestureDetector(
                               onTap: (){
-                                Provider.of<Data>(context, listen: false).paymentGateway(context);
+                                Provider.of<Data>(context, listen: false).paymentGateway(context, false);
                               },
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -454,7 +454,7 @@ class PrePost extends StatelessWidget {
                             padding: const EdgeInsets.only(left: 25),
                             child: GestureDetector(
                               onTap: (){
-                                Provider.of<Data>(context, listen: false).paymentGateway();
+                                Provider.of<Data>(context, listen: false).paymentGateway(context, true);
                               },
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
