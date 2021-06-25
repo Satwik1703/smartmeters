@@ -18,8 +18,8 @@ import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'components/utilities.dart';
 
 class Data extends ChangeNotifier {
-  var url = 'http://18.136.149.198:3074/api'; //Dev url
-  // var url = 'http://65.1.28.192:3074/api';  //Production url
+  // var url = 'http://18.136.149.198:3074/api'; //Dev url
+  var url = 'https://pertsmartcommunity.com:3074/api';  //Production url
 
   var mobile_number = '';
   var otp = '';
@@ -654,7 +654,7 @@ class Data extends ChangeNotifier {
                     ],
                     onChanged: (value){},
                     controller: _controller,
-                    onEditingComplete: (){
+                    onEditingComplete: () async{
                       var value = _controller.text;
                       if(value != ""){
                         if(double.parse(value) < 100.0){
@@ -666,7 +666,68 @@ class Data extends ChangeNotifier {
                           return;
                         }
                         rechargeAmt = double.parse(value);
+
+                        var amount = (rechargeAmt * 100).toInt();
+                        http.Response response = await http.post(
+                          '$url/payments/createRechargeOrder?token=${data['token']}',
+                          headers: <String, String>{
+                            'Content-Type': 'application/json; charset=UTF-8',
+                          },
+                          body: jsonEncode({
+                            "amount": amount,
+                            "flatId": "${data['customerflatData'][flatIndex]['flatId']}",
+                            "paymentId": "${data['customerflatData'][flatIndex]['projectData']['paymentGatewyId']}",
+                            "paymentSecret": "${data['customerflatData'][flatIndex]['projectData']['paymentGatewySecret']}",
+                            "paymentCharges": data['customerflatData'][flatIndex]['projectData']['paymentGatewayCharge']
+                          })
+                        );
+                        var res = json.decode(response.body);
+                        rechargeAmt = 0.0;
+
+                        if(res['error'] != null){
+                          if(res['error']['error'] != null){
+                            Fluttertoast.showToast(
+                              msg: "${res['error']['error']['description']}",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                            );
+                            return;
+                          }
+                          else{
+                            Fluttertoast.showToast(
+                              msg: "${res['error']['message']}",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                            );
+                            return;
+                          }
+                        }
+
                         Navigator.pop(ctx);
+                        var _razorpay = Razorpay();
+                        _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+                        _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+                        var options = {
+                        'key': '${data['customerflatData'][flatIndex]['projectData']['paymentGatewyId']}',
+                        'amount': amount,
+                        'name': 'Pert InfoConsulting',
+                        'description': '${data['customerflatData'][flatIndex]['projectData']['name']}',
+                        'order_id': res['id'],
+                        'timeout': 60*5, // in seconds
+                        'prefill': {
+                          'contact': (data['mobileNo'] != null) ? '${data['mobileNo']}' : "",
+                          'email': (data['email'] != null) ? '${data['email']}' : "",
+                          }
+                        };
+
+                        try{
+                          _razorpay.open(options);
+                        }
+                        catch (e){
+                          print('!--');
+                          print(e);
+                        }
+
                       }
                     },
                   ),
@@ -680,69 +741,7 @@ class Data extends ChangeNotifier {
         ),
 
       )
-    ).then((value) async{
-      if(rechargeAmt == 0.0) return;
-
-      var amount = (rechargeAmt * 100).toInt();
-      http.Response response = await http.post(
-        '$url/payments/createRechargeOrder?token=${data['token']}',
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode({
-          "amount": amount,
-          "flatId": "${data['customerflatData'][flatIndex]['flatId']}",
-          "paymentId": "${data['customerflatData'][flatIndex]['projectData']['paymentGatewyId']}",
-          "paymentSecret": "${data['customerflatData'][flatIndex]['projectData']['paymentGatewySecret']}",
-          "paymentCharges": data['customerflatData'][flatIndex]['projectData']['paymentGatewayCharge']
-        })
-      );
-      var res = json.decode(response.body);
-      rechargeAmt = 0.0;
-
-      if(res['error'] != null){
-        if(res['error']['error'] != null){
-          Fluttertoast.showToast(
-            msg: "${res['error']['error']['description']}",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-          );
-          return;
-        }
-        else{
-          Fluttertoast.showToast(
-            msg: "${res['error']['message']}",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-          );
-          return;
-        }
-      }
-
-      var _razorpay = Razorpay();
-      _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
-      _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
-      var options = {
-      'key': '${data['customerflatData'][flatIndex]['projectData']['paymentGatewyId']}',
-      'amount': amount,
-      'name': 'Pert InfoConsulting',
-      'description': '${data['customerflatData'][flatIndex]['projectData']['name']}',
-      'order_id': res['id'],
-      'timeout': 60*5, // in seconds
-      'prefill': {
-        'contact': (data['mobileNo'] != null) ? '${data['mobileNo']}' : "",
-        'email': (data['email'] != null) ? '${data['email']}' : "",
-        }
-      };
-
-      try{
-        _razorpay.open(options);
-      }
-      catch (e){
-        print('!--');
-        print(e);
-      }
-    });
+    );
   }
 
   Future<void> showPayModal(BuildContext ctx){

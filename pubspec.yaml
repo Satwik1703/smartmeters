@@ -44,7 +44,7 @@ dependencies:
   syncfusion_flutter_pdfviewer: ^18.4.49-beta
   firebase_core: ^0.7.0
   firebase_auth: ^0.20.1
-  razorpay_flutter: 1.1.0
+  razorpay_flutter: ^1.2.5
   connectivity: ^0.4.2
 
 dev_dependencies:
