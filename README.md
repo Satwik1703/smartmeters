@@ -1,5 +1,12 @@
 # smart_meter
 
+## V1.10.0 (production)
+- Integrated Razorpay sdk for payments
+- Added bottom sheets for the user to enter amount during recharge and payment
+- Added validation and toast messages for amounts entered during recharge and payments
+- Converted "http" protocol to "https" protocol in production url
+- Jira Ticket => https://pert-automation.atlassian.net/browse/WHE-411?atlOrigin=eyJpIjoiYTVlYTgyMzZiZTNlNDQ5MDgyZDljM2E0Y2VjMzMzMjciLCJwIjoiaiJ9
+
 ## V1.9.7
 
 - Reversed the Arrow colors in the grid view of Utility
