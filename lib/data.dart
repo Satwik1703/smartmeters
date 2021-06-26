@@ -778,7 +778,7 @@ class Data extends ChangeNotifier {
                   defaultSelected: 'full',
                   buttonLables: [
                     'Full',
-                    'Partial',
+                    'Other',
                   ],
                   buttonValues: [
                     "full",
@@ -859,14 +859,14 @@ class Data extends ChangeNotifier {
                                   return;
                                 }
                                 var number = (dashboardData['postpaiddata']['remainingAmount'].toString() != "") ? double.parse(dashboardData['postpaiddata']['remainingAmount'].toString()) : 0.0;
-                                if(double.parse(_controller.text) > number){
-                                  Fluttertoast.showToast(
-                                    msg: "Amount should be less than Invoice Amount",
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.BOTTOM,
-                                  );
-                                  return;
-                                }
+                                // if(double.parse(_controller.text) > number){
+                                //   Fluttertoast.showToast(
+                                //     msg: "Amount should be less than Invoice Amount",
+                                //     toastLength: Toast.LENGTH_SHORT,
+                                //     gravity: ToastGravity.BOTTOM,
+                                //   );
+                                //   return;
+                                // }
 
                                 var amount = (double.parse(_controller.text)*100).toInt();
                                 var invoiceNo = (dashboardData['postpaiddata']['invoiceNo'] != null) ? dashboardData['postpaiddata']['invoiceNo'] : "";
@@ -965,6 +965,10 @@ class Data extends ChangeNotifier {
     try {
         final result = await InternetAddress.lookup('google.com');
         if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+          if(data['customerflatData'][flatIndex]['projectData']['paymentGatewayCharge'] == null){
+            data['customerflatData'][flatIndex]['projectData']['paymentGatewayCharge'] = 2;
+          }
+
           if(!flag){
             await showModal(context);
           }
@@ -979,107 +983,6 @@ class Data extends ChangeNotifier {
           gravity: ToastGravity.BOTTOM,
         );
       }
-
-    // if(!flag){
-    //   try {
-    //     final result = await InternetAddress.lookup('google.com');
-    //     if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-    //       await showModal(context);
-    //     }
-    //   } on SocketException catch (_) {
-    //     Fluttertoast.showToast(
-    //       msg: "Please Check Your Internet Connection",
-    //       toastLength: Toast.LENGTH_SHORT,
-    //       gravity: ToastGravity.BOTTOM,
-    //     );
-    //   }
-    // }
-    // else{
-    //   try {
-    //     final result = await InternetAddress.lookup('google.com');
-    //     if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-    //     }
-    //   } on SocketException catch (_) {
-    //     Fluttertoast.showToast(
-    //       msg: "Please Check Your Internet Connection",
-    //       toastLength: Toast.LENGTH_SHORT,
-    //       gravity: ToastGravity.BOTTOM,
-    //     );
-    //     return;
-    //   }
-    //
-    //   await showPayModal(context);
-    //
-    //   // var number = dashboardData['postpaiddata']['remainingAmount'].toString();
-    //   // if(number == "" || double.parse(number) < 100.0){
-    //   //   Fluttertoast.showToast(
-    //   //     msg: "Minimum Amount should be Rs 100",
-    //   //     toastLength: Toast.LENGTH_SHORT,
-    //   //     gravity: ToastGravity.BOTTOM,
-    //   //   );
-    //   //   return;
-    //   // }
-    //   // var amount = (number != "") ? (double.parse(number)*100).toInt() : 10000;
-    //   // var invoiceNo = (dashboardData['postpaiddata']['invoiceNo'] != null) ? dashboardData['postpaiddata']['invoiceNo'] : "";
-    //   //
-    //   // http.Response response = await http.post(
-    //   //     '$url/payments/createBillOrder?token=${data['token']}',
-    //   //     headers: <String, String>{
-    //   //       'Content-Type': 'application/json; charset=UTF-8',
-    //   //     },
-    //   //     body: jsonEncode({
-    //   //       "amount": amount,
-    //   //       "invoiceNo": invoiceNo,
-    //   //       "partial_payment": true,
-    //   //       "paymentId": "${data['customerflatData'][flatIndex]['projectData']['paymentGatewyId']}",
-    //   //       "paymentSecret": "${data['customerflatData'][flatIndex]['projectData']['paymentGatewySecret']}",
-    //   //       "paymentCharges": 2,
-    //   //     })
-    //   // );
-    //   // var res = json.decode(response.body);
-    //   //
-    //   // if(res['error'] != null){
-    //   //   if(res['error']['error'] != null){
-    //   //     Fluttertoast.showToast(
-    //   //       msg: "${res['error']['error']['description']}",
-    //   //       toastLength: Toast.LENGTH_SHORT,
-    //   //       gravity: ToastGravity.BOTTOM,
-    //   //     );
-    //   //     return;
-    //   //   }
-    //   //   else{
-    //   //     Fluttertoast.showToast(
-    //   //       msg: "${res['error']['message']}",
-    //   //       toastLength: Toast.LENGTH_SHORT,
-    //   //       gravity: ToastGravity.BOTTOM,
-    //   //     );
-    //   //     return;
-    //   //   }
-    //   // }
-    //   //
-    //   // var _razorpay = Razorpay();
-    //   // _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
-    //   // _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
-    //   // var options = {
-    //   //   'key': 'rzp_test_ITxbvBezOt6Qg8',
-    //   //   'amount': amount,
-    //   //   'name': 'Pert InfoConsulting',
-    //   //   'description': '${data['customerflatData'][flatIndex]['projectData']['name']}',
-    //   //   'order_id': res['id'],
-    //   //   'timeout': 60*5, // in seconds
-    //   //   'prefill': {
-    //   //     'contact': (data['mobileNo'] != null) ? '${data['mobileNo']}' : "",
-    //   //     'email': (data['email'] != null) ? '${data['email']}' : "",
-    //   //   }
-    //   // };
-    //   //
-    //   // try{
-    //   //   _razorpay.open(options);
-    //   // }
-    //   // catch (e){
-    //   //   print(e);
-    //   // }
-    // }
   }
 
 }

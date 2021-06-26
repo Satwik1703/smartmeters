@@ -1,4 +1,6 @@
 # smart_meter
+## V1.10.1
+- Replaced partial payment option with "other" payment option where users can enter any amount to pay
 
 ## V1.10.0 (production)
 - Integrated Razorpay sdk for payments
