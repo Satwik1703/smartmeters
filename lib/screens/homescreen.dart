@@ -1,8 +1,10 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -26,21 +28,49 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Widget> topWidgets = <Widget>[
     TestRow(),
     TestRow(),
-    // TopRow(),
+    TopRow(),
     // Container(height: 0,),
   ];
 
   List<Widget> widgets = <Widget>[
     Dashboard(),
     Transactions(),
-    // Notifications(),
+    Notifications(),
     // Settings(),
   ];
+
+  FirebaseMessaging messaging;
 
   @override
   void initState() {
     super.initState();
+    // index = Provider.of<Data>(context, listen: true).index;
     loadTransactions();
+    firebaseNotifications();
+  }
+
+  void firebaseNotifications() async {
+    Provider.of<Data>(context, listen: false).initialiseNotification();
+
+    messaging = FirebaseMessaging.instance;
+    messaging
+      .getToken()
+      .then((value){
+        Provider.of<Data>(context, listen: false).updateDeviceToken(value);
+    });
+
+    // FirebaseMessaging.onBackgroundMessage((RemoteMessage message) async{
+    //   Provider.of<Data>(context, listen: false).displayNotification(message.notification.title, message.notification.body);
+    // });
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      Provider.of<Data>(context, listen: false).displayNotification(message.notification.title, message.notification.body);
+    });
+
+
+    FirebaseMessaging.onMessageOpenedApp.listen((message) {
+      print('Message clicked!');
+    });
   }
 
   void loadTransactions() async {
@@ -55,8 +85,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     var navBarHeight = kBottomNavigationBarHeight * 0.7;
-    var navBarWidth = 0.7;
-    // var navBarWidth = 0.95;
+    // var navBarWidth = 0.7;
+    var navBarWidth = 1.0;
+    index = Provider.of<Data>(context, listen: true).index;
 
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
@@ -65,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
         items: [
           bottomNavigationBarItem(navBarWidth, navBarHeight, 0, 'dashboard', 'Dashboard'),
           bottomNavigationBarItem(navBarWidth, navBarHeight, 1, 'transactions', 'Transactions'),
-          // bottomNavigationBarItem(navBarWidth, navBarHeight, 2, 'notifications', 'Notifications'),
+          bottomNavigationBarItem(navBarWidth, navBarHeight, 2, 'notifications', 'Notifications'),
           // bottomNavigationBarItem(navBarWidth, navBarHeight, 2, 'settings_bottom_bar', 'Settings'),
         ],
         currentIndex: index,
@@ -73,6 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
           setState(() {
             index = value;
           });
+          Provider.of<Data>(context, listen: false).setIndex(value);
         },
       ),
       body: Column(

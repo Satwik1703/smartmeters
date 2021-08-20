@@ -314,7 +314,7 @@ class PrePost extends StatelessWidget {
       keepScrollOffset: true,
     );
     return SizedBox(
-      height: (MediaQuery.of(context).size.height > 600) ? MediaQuery.of(context).size.height * 0.2 : MediaQuery.of(context).size.height * 0.23,
+      height: (MediaQuery.of(context).size.height > 600) ? MediaQuery.of(context).size.height * 0.21 : MediaQuery.of(context).size.height * 0.23,
       child: Card(
         margin: EdgeInsets.only(left: 10.0, right: 10.0),
         elevation: 4,
@@ -347,7 +347,7 @@ class PrePost extends StatelessWidget {
                                   text: TextSpan(
                                       style: TextStyle(fontSize: size_1, color: const Color(0xFF262626)),
                                       children: [
-                                        TextSpan(text: '${Provider.of<Data>(context).dashboardData['prepaiddata']['cost']}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: size_2, color: const Color(0xFF262626))),
+                                        TextSpan(text: '${Provider.of<Data>(context).dashboardData['prepaiddata']['cost']}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: size_2*0.9, color: const Color(0xFF262626))),
                                         TextSpan(text: ' INR')
                                       ]
                                   )
@@ -387,7 +387,7 @@ class PrePost extends StatelessWidget {
                                         text: TextSpan(
                                             style: TextStyle(fontSize: size_1, color: const Color(0xFF262626),),
                                             children: [
-                                              TextSpan(text: '${Provider.of<Data>(context).dashboardData['postpaiddata']['invoiceAmount']}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: size_2, color: const Color(0xFF262626))),
+                                              TextSpan(text: '${Provider.of<Data>(context).dashboardData['postpaiddata']['invoiceAmount']}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: size_2*0.9, color: const Color(0xFF262626))),
                                               TextSpan(text: ' INR')
                                             ]
                                         )
@@ -404,7 +404,7 @@ class PrePost extends StatelessWidget {
                                         text: TextSpan(
                                             style: TextStyle(fontSize: size_1, color: const Color(0xFF262626),),
                                             children: [
-                                              TextSpan(text: '${Provider.of<Data>(context).dashboardData['postpaiddata']['remainingAmount']}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: size_2*0.75, color: const Color(0xFF262626))),
+                                              TextSpan(text: '${Provider.of<Data>(context).dashboardData['postpaiddata']['remainingAmount']}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: size_2*0.8, color: const Color(0xFF262626))),
                                               TextSpan(text: ' INR'),
                                             ]
                                         )

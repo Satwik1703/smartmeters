@@ -89,6 +89,7 @@ class _NotificationsState extends State<Notifications> {
   void initState() {
     super.initState();
     alerts = true;
+    Provider.of<Data>(context, listen: false).getNotifications();
   }
 
   @override
@@ -111,17 +112,17 @@ class _NotificationsState extends State<Notifications> {
                 elevation: 0,
                 absoluteZeroSpacing: false,
                 enableShape: true,
-                width: MediaQuery.of(context).size.height * 0.15,
-                // customShape: RoundedRectangleBorder(
-                //   borderRadius: BorderRadius.circular(15.0),
-                // ),
+                width: MediaQuery.of(context).size.height * 0.12,
+                customShape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
                 buttonLables: [
                   'Alerts',
-                  'Promotions'
+                  // 'Promotions'
                 ],
                 buttonValues: [
                   'alerts',
-                  'promotions'
+                  // 'promotions'
                 ],
                 defaultSelected: 'alerts',
 
@@ -168,22 +169,70 @@ class Alerts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: EdgeInsets.all(0.0),
-      children: [
-        SizedBox(height: 20.0,),
-        NotiInvoice(),
-        NotiInvoice(),
-      ],
+    // return ListView(
+    //   padding: EdgeInsets.all(0.0),
+    //   children: [
+    //     SizedBox(height: 20.0,),
+    //     NotiInvoice(),
+    //     NotiPayment(),
+    //     NotiRecharge(),
+    //     NotiOther(),
+    //   ],
+    // );
+
+    if(Provider.of<Data>(context, listen: false).notifications.length < 1){
+      return Center(child: Text('No Notifications'));
+    }
+
+    return ListView.builder(
+      itemCount: Provider.of<Data>(context, listen: false).notifications.length,
+      itemBuilder: (context, index){
+        if(Provider.of<Data>(context, listen: false).notifications[index]['data']['type'] == 1){
+          return(
+            NotiRecharge(index)
+          );
+        }
+        else if(Provider.of<Data>(context, listen: false).notifications[index]['data']['type'] == 2){
+          return(
+            NotiInvoice(index)
+          );
+        }
+        else if(Provider.of<Data>(context, listen: false).notifications[index]['data']['type'] == 3){
+          return(
+            NotiPayment(index)
+          );
+        }
+        return(
+          NotiOther(index)
+        );
+      },
     );
   }
 }
 
 class NotiInvoice extends StatelessWidget {
+
+  var index;
+  NotiInvoice(var index){
+    this.index = index;
+  }
+
   @override
   Widget build(BuildContext context) {
+    var timeElapsed = "0h";
+    var timeDifference = 0;
+    if(Provider.of<Data>(context, listen: false).notifications[index]['data']['sendDate'] != null && Provider.of<Data>(context, listen: false).notifications[index]['data']['sendDate'] != ""){
+      timeDifference = DateTime.now().difference(DateTime.parse("${Provider.of<Data>(context, listen: false).notifications[index]['data']['sendDate']}")).inDays;
+      timeElapsed = '${timeDifference}d';
+
+      if(timeDifference < 1){
+        timeDifference = DateTime.now().difference(DateTime.parse("${Provider.of<Data>(context, listen: false).notifications[index]['data']['sendDate']}")).inHours + 5;
+        timeElapsed = '${timeDifference}h';
+      }
+    }
+
     return SizedBox(
-      height: (MediaQuery.of(context).size.height > 600) ? MediaQuery.of(context).size.height * 0.12 : MediaQuery.of(context).size.height * 0.18,
+      height: (MediaQuery.of(context).size.height > 600) ? MediaQuery.of(context).size.height * 0.14 : MediaQuery.of(context).size.height * 0.18,
       width: double.infinity,
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 10.0),
@@ -198,33 +247,34 @@ class NotiInvoice extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  AutoSizeText.rich(
-                    TextSpan(
-                      text: 'Invoice of ',
-                      children: [
-                        TextSpan(
-                          text: '3500 INR',
-                          style: TextStyle(fontWeight: FontWeight.bold)
-                        ),
-                        TextSpan(text: ' generated for '),
-                        TextSpan(
-                          text: "Jan'21",
-                          style: TextStyle(fontWeight: FontWeight.bold)
-                        ),
-                        TextSpan(text: ' to be payed by '),
-                        TextSpan(
-                          text: "6 Feb'21",
-                          style: TextStyle(fontWeight: FontWeight.bold)
-                        ),
-                      ],
-                    ),
-                    minFontSize: 2,
-                    maxLines: 2,
-                  ),
+                  // AutoSizeText.rich(
+                  //   TextSpan(
+                  //     text: 'Invoice of ',
+                  //     children: [
+                  //       TextSpan(
+                  //         text: '3500 INR',
+                  //         style: TextStyle(fontWeight: FontWeight.bold)
+                  //       ),
+                  //       TextSpan(text: ' generated for '),
+                  //       TextSpan(
+                  //         text: "Jan'21",
+                  //         style: TextStyle(fontWeight: FontWeight.bold)
+                  //       ),
+                  //       TextSpan(text: ' to be payed by '),
+                  //       TextSpan(
+                  //         text: "6 Feb'21",
+                  //         style: TextStyle(fontWeight: FontWeight.bold)
+                  //       ),
+                  //     ],
+                  //   ),
+                  //   minFontSize: 2,
+                  //   maxLines: 2,
+                  // ),
+                  AutoSizeText("${Provider.of<Data>(context, listen: false).notifications[index]['data']['description']}", maxLines: 2,),
                   SizedBox(height: 15,),
                   GestureDetector(
                     onTap: (){
-                      print('tapped');
+                      Provider.of<Data>(context, listen: false).setIndex(1);
                     },
                     child: AutoSizeText('View Invoice', maxLines: 1, minFontSize: 2, style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFF77C25)),),
                   )
@@ -245,7 +295,219 @@ class NotiInvoice extends StatelessWidget {
                       borderRadius: BorderRadius.only(topLeft: Radius.circular(10.0), bottomLeft: Radius.circular(10.0)),
                       color: Color.fromRGBO(247, 124, 37, 0.2)
                     ),
-                    child: Text('1h'),
+                    child: Text('$timeElapsed'),
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class NotiPayment extends StatelessWidget {
+  var index;
+  NotiPayment(var index){
+    this.index = index;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var timeElapsed = "0h";
+    var timeDifference = 0;
+    if(Provider.of<Data>(context, listen: false).notifications[index]['data']['sendDate'] != null && Provider.of<Data>(context, listen: false).notifications[index]['data']['sendDate'] != ""){
+      timeDifference = DateTime.now().difference(DateTime.parse("${Provider.of<Data>(context, listen: false).notifications[index]['data']['sendDate']}")).inDays;
+      timeElapsed = '${timeDifference}d';
+
+      if(timeDifference < 1){
+        timeDifference = DateTime.now().difference(DateTime.parse("${Provider.of<Data>(context, listen: false).notifications[index]['data']['sendDate']}")).inHours + 5;
+        timeElapsed = '${timeDifference}h';
+      }
+    }
+
+    return SizedBox(
+      height: (MediaQuery.of(context).size.height > 600) ? MediaQuery.of(context).size.height * 0.14 : MediaQuery.of(context).size.height * 0.18,
+      width: double.infinity,
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 10.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(width: 10.0,),
+            SvgPicture.asset('assets/invoice.svg', height: 55, width: 55,),
+            SizedBox(width: 10.0,),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  AutoSizeText("${Provider.of<Data>(context, listen: false).notifications[index]['data']['description']}", maxLines: 2,),
+                  SizedBox(height: 15,),
+                  GestureDetector(
+                    onTap: (){
+                      Provider.of<Data>(context, listen: false).paymentGateway(context, true);
+                    },
+                    child: AutoSizeText('Pay Now', maxLines: 1, minFontSize: 2, style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFF77C25)),),
+                  )
+                ],
+              ),
+            ),
+            SizedBox(width: 10.0,),
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.13,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Container(
+                    height: 30,
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(topLeft: Radius.circular(10.0), bottomLeft: Radius.circular(10.0)),
+                      color: Color.fromRGBO(247, 124, 37, 0.2)
+                    ),
+                    child: Text('$timeElapsed'),
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class NotiRecharge extends StatelessWidget {
+  var index;
+  NotiRecharge(var index){
+    this.index = index;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var timeElapsed = "0h";
+    var timeDifference = 0;
+    if(Provider.of<Data>(context, listen: false).notifications[index]['data']['sendDate'] != null && Provider.of<Data>(context, listen: false).notifications[index]['data']['sendDate'] != ""){
+      timeDifference = DateTime.now().difference(DateTime.parse("${Provider.of<Data>(context, listen: false).notifications[index]['data']['sendDate']}")).inDays;
+      timeElapsed = '${timeDifference}d';
+
+      if(timeDifference < 1){
+        timeDifference = DateTime.now().difference(DateTime.parse("${Provider.of<Data>(context, listen: false).notifications[index]['data']['sendDate']}")).inHours + 5;
+        timeElapsed = '${timeDifference}h';
+      }
+    }
+
+    return SizedBox(
+      height: (MediaQuery.of(context).size.height > 600) ? MediaQuery.of(context).size.height * 0.14 : MediaQuery.of(context).size.height * 0.18,
+      width: double.infinity,
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 10.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(width: 10.0,),
+            SvgPicture.asset('assets/wallet.svg', height: 55, width: 55,),
+            SizedBox(width: 10.0,),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  AutoSizeText("${Provider.of<Data>(context, listen: false).notifications[index]['data']['description']}", maxLines: 2,),
+                  SizedBox(height: 15,),
+                  GestureDetector(
+                    onTap: (){
+                      Provider.of<Data>(context, listen: false).paymentGateway(context, false);
+                    },
+                    child: AutoSizeText('Recharge', maxLines: 1, minFontSize: 2, style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFF77C25)),),
+                  )
+                ],
+              ),
+            ),
+            SizedBox(width: 10.0,),
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.13,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Container(
+                    height: 30,
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(topLeft: Radius.circular(10.0), bottomLeft: Radius.circular(10.0)),
+                      color: Color.fromRGBO(247, 124, 37, 0.2)
+                    ),
+                    child: Text('$timeElapsed'),
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class NotiOther extends StatelessWidget {
+  var index;
+  NotiOther(var index){
+    this.index = index;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var timeElapsed = "0h";
+    var timeDifference = 0;
+    if(Provider.of<Data>(context, listen: false).notifications[index]['data']['sendDate'] != null && Provider.of<Data>(context, listen: false).notifications[index]['data']['sendDate'] != ""){
+      timeDifference = DateTime.now().difference(DateTime.parse("${Provider.of<Data>(context, listen: false).notifications[index]['data']['sendDate']}")).inDays;
+      timeElapsed = '${timeDifference}d';
+
+      if(timeDifference < 1){
+        timeDifference = DateTime.now().difference(DateTime.parse("${Provider.of<Data>(context, listen: false).notifications[index]['data']['sendDate']}")).inHours + 5;
+        timeElapsed = '${timeDifference}h';
+      }
+    }
+
+    return SizedBox(
+      height: (MediaQuery.of(context).size.height > 600) ? MediaQuery.of(context).size.height * 0.14 : MediaQuery.of(context).size.height * 0.18,
+      width: double.infinity,
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 10.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(width: 10.0,),
+            SvgPicture.asset('assets/wallet.svg', height: 55, width: 55,),
+            SizedBox(width: 10.0,),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  AutoSizeText("${Provider.of<Data>(context, listen: false).notifications[index]['data']['description']}", maxLines: 2,),
+                ],
+              ),
+            ),
+            SizedBox(width: 10.0,),
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.13,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Container(
+                    height: 30,
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(topLeft: Radius.circular(10.0), bottomLeft: Radius.circular(10.0)),
+                      color: Color.fromRGBO(247, 124, 37, 0.2)
+                    ),
+                    child: Text('$timeElapsed'),
                   )
                 ],
               ),

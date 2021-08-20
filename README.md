@@ -1,4 +1,10 @@
 # smart_meter
+## V1.10.2 (production)
+- Upgraded all the app packages
+- Added Firebase Notifications
+- Added Notifications Screen
+- Jira Ticket => https://pert-automation.atlassian.net/browse/WHE-466
+
 ## V1.10.1
 - Replaced partial payment option with "other" payment option where users can enter any amount to pay
 

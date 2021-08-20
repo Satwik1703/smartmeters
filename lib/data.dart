@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -23,6 +24,7 @@ class Data extends ChangeNotifier {
 
   var mobile_number = '';
   var otp = '';
+  var index = 0;
   var flatIndex = 0;
   var dashboardData;
   var data;
@@ -41,12 +43,11 @@ class Data extends ChangeNotifier {
   var consumed;
   var rechargeAmt = 0.0;
   var invoicePay = "full";
-
   var date = new DateTime.now().toString();
   var dateParse;
-
   var counterDate = DateTime.parse(new DateTime.now().toString());
-
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  var notifications = [];
 
   void changeMobileNumber(String number) {
     mobile_number = number;
@@ -55,6 +56,11 @@ class Data extends ChangeNotifier {
 
   void changeOtp(String value) {
     otp = value;
+    notifyListeners();
+  }
+
+  void setIndex(value) {
+    index = value;
     notifyListeners();
   }
 
@@ -118,7 +124,7 @@ class Data extends ChangeNotifier {
 
   Future<String> getOtp() async {
     http.Response response = await http.get(
-      '$url/customers/getOtp?mobileno=$mobile_number&deviceId=12345&platformType=android'
+      Uri.parse('$url/customers/getOtp?mobileno=$mobile_number&deviceId=12345&platformType=android')
     );
     var res = json.decode(response.body);
     if(res['success'] == true){
@@ -132,7 +138,7 @@ class Data extends ChangeNotifier {
 
   Future<String> validateOtp() async {
     http.Response response = await http.post(
-      '$url/customers/validateOtp',
+      Uri.parse('$url/customers/validateOtp'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -167,10 +173,11 @@ class Data extends ChangeNotifier {
     }
     catch (e){
       print('Initialize warning');
+      print('data.dart');
     }
 
     http.Response response = await http.post(
-        '$url/meterDataSummaries/getCustomerData?token=${data['token']}',
+        Uri.parse('$url/meterDataSummaries/getCustomerData?token=${data['token']}'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -206,7 +213,7 @@ class Data extends ChangeNotifier {
     else if(value == 'Week'){
       if(dropdownData[1] == null){
         http.Response response = await http.post(
-            '$url/meterDataSummaries/getCustomerData?token=${data['token']}',
+            Uri.parse('$url/meterDataSummaries/getCustomerData?token=${data['token']}'),
             headers: <String, String>{
               'Content-Type': 'application/json; charset=UTF-8',
             },
@@ -235,7 +242,7 @@ class Data extends ChangeNotifier {
     else if(value == 'Month'){
       if(dropdownData[2] == null){
         http.Response response = await http.post(
-            '$url/meterDataSummaries/getCustomerData?token=${data['token']}',
+            Uri.parse('$url/meterDataSummaries/getCustomerData?token=${data['token']}'),
             headers: <String, String>{
               'Content-Type': 'application/json; charset=UTF-8',
             },
@@ -264,7 +271,7 @@ class Data extends ChangeNotifier {
     else if(value == 'Year'){
       if(dropdownData[3] == null){
         http.Response response = await http.post(
-            '$url/meterDataSummaries/getCustomerData?token=${data['token']}',
+            Uri.parse('$url/meterDataSummaries/getCustomerData?token=${data['token']}'),
             headers: <String, String>{
               'Content-Type': 'application/json; charset=UTF-8',
             },
@@ -291,7 +298,7 @@ class Data extends ChangeNotifier {
     else if(value == 'Year'){
       if(dropdownData[3] == null){
         http.Response response = await http.post(
-            '$url/meterDataSummaries/getCustomerData?token=${data['token']}',
+            Uri.parse('$url/meterDataSummaries/getCustomerData?token=${data['token']}'),
             headers: <String, String>{
               'Content-Type': 'application/json; charset=UTF-8',
             },
@@ -319,7 +326,7 @@ class Data extends ChangeNotifier {
 
   Future<void> refreshData() async{
     http.Response response = await http.post(
-        '$url/meterDataSummaries/getCustomerData?token=${data['token']}',
+        Uri.parse('$url/meterDataSummaries/getCustomerData?token=${data['token']}'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -345,7 +352,7 @@ class Data extends ChangeNotifier {
   Future<void> getGraphData(requestType, utility) async{
     dateParse =  DateTime.parse(date);
     http.Response response = await http.post(
-        '$url/meterDataSummaries/getUtilitySummaryApp?token=${data['token']}',
+        Uri.parse('$url/meterDataSummaries/getUtilitySummaryApp?token=${data['token']}'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -395,7 +402,7 @@ class Data extends ChangeNotifier {
   Future<void> getBarData(barValue) async{
     if(radioButtomValue == 'yearlySum'){
       http.Response response = await http.post(
-          '$url/meterDataSummaries/getUtilitySummaryApp?token=${data['token']}',
+          Uri.parse('$url/meterDataSummaries/getUtilitySummaryApp?token=${data['token']}'),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
           },
@@ -417,7 +424,7 @@ class Data extends ChangeNotifier {
 
     else if(radioButtomValue == 'yearly'){
       http.Response response = await http.post(
-          '$url/meterDataSummaries/getUtilitySummaryApp?token=${data['token']}',
+          Uri.parse('$url/meterDataSummaries/getUtilitySummaryApp?token=${data['token']}'),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
           },
@@ -439,7 +446,7 @@ class Data extends ChangeNotifier {
 
     else if(radioButtomValue == 'weeklySum'){
       http.Response response = await http.post(
-          '$url/meterDataSummaries/getUtilitySummaryApp?token=${data['token']}',
+          Uri.parse('$url/meterDataSummaries/getUtilitySummaryApp?token=${data['token']}'),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
           },
@@ -470,7 +477,7 @@ class Data extends ChangeNotifier {
 
   Future<void> getTransactions(month, year) async{
     http.Response response = await http.get(
-        '$url/ledgers/getTransactionDataApp?flatId=${data['customerflatData'][flatIndex]['flatId']}&year=$year&month=$month&token=${data['token']}',
+        Uri.parse('$url/ledgers/getTransactionDataApp?flatId=${data['customerflatData'][flatIndex]['flatId']}&year=$year&month=$month&token=${data['token']}'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -485,7 +492,7 @@ class Data extends ChangeNotifier {
 
   Future<void> getReadings(flatId, blockId, date, utility, ) async{
     http.Response response = await http.get(
-      '$url/deviceflats/getUntitsData?&projectId=${data['customerflatData'][flatIndex]['projectId']}&flatId=$flatId&blockId=$blockId&date=$date&utility=$utility&token=${data['token']}',
+      Uri.parse('$url/deviceflats/getUntitsData?&projectId=${data['customerflatData'][flatIndex]['projectId']}&flatId=$flatId&blockId=$blockId&date=$date&utility=$utility&token=${data['token']}'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -542,7 +549,7 @@ class Data extends ChangeNotifier {
     mobileNo = mobileNo.toString().substring(spaceNumberIndex+1).trim();
 
     http.Response response = await http.put(
-          '$url/customers/updateCustomer?token=${data['token']}',
+          Uri.parse('$url/customers/updateCustomer?token=${data['token']}'),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
           },
@@ -669,7 +676,7 @@ class Data extends ChangeNotifier {
 
                         var amount = (rechargeAmt * 100).toInt();
                         http.Response response = await http.post(
-                          '$url/payments/createRechargeOrder?token=${data['token']}',
+                          Uri.parse('$url/payments/createRechargeOrder?token=${data['token']}'),
                           headers: <String, String>{
                             'Content-Type': 'application/json; charset=UTF-8',
                           },
@@ -872,7 +879,7 @@ class Data extends ChangeNotifier {
                                 var invoiceNo = (dashboardData['postpaiddata']['invoiceNo'] != null) ? dashboardData['postpaiddata']['invoiceNo'] : "";
 
                                 http.Response response = await http.post(
-                                    '$url/payments/createBillOrder?token=${data['token']}',
+                                    Uri.parse('$url/payments/createBillOrder?token=${data['token']}'),
                                     headers: <String, String>{
                                       'Content-Type': 'application/json; charset=UTF-8',
                                     },
@@ -968,7 +975,6 @@ class Data extends ChangeNotifier {
           if(data['customerflatData'][flatIndex]['projectData']['paymentGatewayCharge'] == null){
             data['customerflatData'][flatIndex]['projectData']['paymentGatewayCharge'] = 2;
           }
-
           if(!flag){
             await showModal(context);
           }
@@ -983,6 +989,76 @@ class Data extends ChangeNotifier {
           gravity: ToastGravity.BOTTOM,
         );
       }
+  }
+
+  void updateDeviceToken(token) async{
+    var platform = '';
+    if(Platform.isAndroid){
+      platform = 'Android';
+    }
+    else{
+      platform = 'IOS';
+    }
+
+    http.Response response = await http.post(
+      Uri.parse('$url/customers/updateDeviceToken'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({
+        "platformType": platform,
+        "deviceId": token,
+        "id": data['projectId']
+      })
+    );
+    var res = json.decode(response.body);
+    notifyListeners();
+  }
+
+
+  // Firebase Notifications-----------------------------------------------------
+  void initialiseNotification() async{
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('notification_icon');
+    final IOSInitializationSettings initializationSettingsIOS = IOSInitializationSettings();
+
+    final InitializationSettings initializationSettings = InitializationSettings(
+        android: initializationSettingsAndroid,
+        iOS: initializationSettingsIOS
+    );
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+    print('Notifications initialized');
+  }
+
+  void displayNotification(title, body) async {
+    print('Entered Display Notification Method');
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+    AndroidNotificationDetails(
+        'firebaseNotifications', 'Firebase Notifications', 'Firebase Notifications',
+        importance: Importance.max,
+        priority: Priority.high,
+        showWhen: false);
+    const NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(
+        0, title, body, platformChannelSpecifics,
+        payload: 'item x');
+  }
+
+  void getNotifications() async{
+    http.Response response = await http.get(
+      Uri.parse('$url/notifications/getNotifications?customerId=${data['customerflatData'][flatIndex]['customerId']}&token=${data['token']}'),
+    );
+    if(response.statusCode == 200){
+      var res = json.decode(response.body);
+      notifications = res;
+      notifyListeners();
+    }
+    else{
+      print('Error in Getting Notifications');
+      var res = json.decode(response.body);
+      print(res);
+    }
   }
 
 }

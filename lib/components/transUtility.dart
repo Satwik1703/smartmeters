@@ -782,6 +782,11 @@ class TransInvoice extends StatelessWidget {
     else{
       time = "${data['createdAt'].toString().substring(11, 16)} pm";
     }
+
+    if(data['billGenerateData'] == null) {
+      return Container();
+    }
+
     return RawMaterialButton(
       onPressed: (){
         showModalBottomSheet(
