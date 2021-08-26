@@ -6,7 +6,8 @@
         android:label="SmartMeters"
         android:icon="@mipmap/ic_launcher"
         android:allowBackup="false"
-        android:fullBackupOnly="false">
+        android:fullBackupOnly="false"
+        android:requestLegacyExternalStorage="true">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

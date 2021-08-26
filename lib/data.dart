@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:isolate';
+import 'dart:ui';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:custom_radio_grouped_button/CustomButtons/CustomRadioButton.dart';
 import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
@@ -19,8 +21,8 @@ import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'components/utilities.dart';
 
 class Data extends ChangeNotifier {
-  // var url = 'http://18.136.149.198:3074/api'; //Dev url
-  var url = 'https://pertsmartcommunity.com:3074/api';  //Production url
+  var url = 'http://18.136.149.198:3074/api'; //Dev url
+  // var url = 'https://pertsmartcommunity.com:3074/api';  //Production url
 
   var mobile_number = '';
   var otp = '';
@@ -514,17 +516,32 @@ class Data extends ChangeNotifier {
       gravity: ToastGravity.BOTTOM,
     );
 
-    String dir = (await getExternalStorageDirectory()).path;
-    final taskId = await FlutterDownloader.enqueue(
-      url: '$url/containers/invoice/download/$invoiceNo.pdf',
-      savedDir: '$dir',
-      showNotification: true, // show download progress in status bar (for Android)
-      openFileFromNotification: true, // click on notification to open downloaded file (for Android)
-    );
+    try{
+      FlutterDownloader.registerCallback(downloadCallback);
 
-    await Future.delayed(const Duration(seconds: 2), (){});
-    await FlutterDownloader.open(taskId: taskId);
-    return ("Download Completed");
+      String dir = (await getExternalStorageDirectory()).path;
+      print(dir);
+      final taskId = await FlutterDownloader.enqueue(
+        url: '$url/containers/invoice/download/$invoiceNo.pdf',
+        savedDir: '$dir',
+        showNotification: true, // show download progress in status bar (for Android)
+        openFileFromNotification: true, // click on notification to open downloaded file (for Android)
+      );
+
+      await Future.delayed(const Duration(seconds: 3), (){});
+      await FlutterDownloader.open(taskId: taskId);
+      return ("File saved at $dir");
+
+    }
+    catch (err){
+      print(err);
+      return ('Download Failed');
+    }
+  }
+
+  static void downloadCallback(String id, DownloadTaskStatus status, int progress) {
+    final SendPort send = IsolateNameServer.lookupPortByName('downloader_send_port');
+    send.send([id, status, progress]);
   }
 
   Future<void> logout() async{
@@ -1000,7 +1017,7 @@ class Data extends ChangeNotifier {
       platform = 'IOS';
     }
 
-    http.Response response = await http.post(
+    http.Response response = await http.put(
       Uri.parse('$url/customers/updateDeviceToken'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
@@ -1008,7 +1025,7 @@ class Data extends ChangeNotifier {
       body: jsonEncode({
         "platformType": platform,
         "deviceId": token,
-        "id": data['projectId']
+        "id": '${data['customerflatData'][flatIndex]['projectId']}',
       })
     );
     var res = json.decode(response.body);
