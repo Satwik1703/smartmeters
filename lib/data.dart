@@ -520,7 +520,6 @@ class Data extends ChangeNotifier {
       FlutterDownloader.registerCallback(downloadCallback);
 
       String dir = (await getExternalStorageDirectory()).path;
-      print(dir);
       final taskId = await FlutterDownloader.enqueue(
         url: '$url/containers/invoice/download/$invoiceNo.pdf',
         savedDir: '$dir',
@@ -1025,7 +1024,7 @@ class Data extends ChangeNotifier {
       body: jsonEncode({
         "platformType": platform,
         "deviceId": token,
-        "id": '${data['customerflatData'][flatIndex]['projectId']}',
+        "id": '${data['customerflatData'][flatIndex]['customerId']}',
       })
     );
     var res = json.decode(response.body);
