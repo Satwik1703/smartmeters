@@ -701,7 +701,8 @@ class Data extends ChangeNotifier {
                             "flatId": "${data['customerflatData'][flatIndex]['flatId']}",
                             "paymentId": "${data['customerflatData'][flatIndex]['projectData']['paymentGatewyId']}",
                             "paymentSecret": "${data['customerflatData'][flatIndex]['projectData']['paymentGatewySecret']}",
-                            "paymentCharges": data['customerflatData'][flatIndex]['projectData']['paymentGatewayCharge']
+                            "paymentCharges": data['customerflatData'][flatIndex]['projectData']['paymentGatewayCharge'],
+                            "customerId": "${data['customerflatData'][flatIndex]['customerId']}",
                           })
                         );
                         var res = json.decode(response.body);
@@ -906,6 +907,7 @@ class Data extends ChangeNotifier {
                                       "paymentId": "${data['customerflatData'][flatIndex]['projectData']['paymentGatewyId']}",
                                       "paymentSecret": "${data['customerflatData'][flatIndex]['projectData']['paymentGatewySecret']}",
                                       "paymentCharges": data['customerflatData'][flatIndex]['projectData']['paymentGatewayCharge'],
+                                      "customerId": "${data['customerflatData'][flatIndex]['customerId']}",
                                     })
                                 );
                                 var res = json.decode(response.body);
@@ -1015,6 +1017,8 @@ class Data extends ChangeNotifier {
     else{
       platform = 'IOS';
     }
+    print('!--');
+    print(token);
 
     http.Response response = await http.put(
       Uri.parse('$url/customers/updateDeviceToken'),
@@ -1061,7 +1065,7 @@ class Data extends ChangeNotifier {
         payload: 'item x');
   }
 
-  void getNotifications() async{
+  Future<void> getNotifications() async{
     http.Response response = await http.get(
       Uri.parse('$url/notifications/getNotifications?customerId=${data['customerflatData'][flatIndex]['customerId']}&token=${data['token']}'),
     );

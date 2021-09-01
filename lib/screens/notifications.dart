@@ -153,7 +153,11 @@ class _NotificationsState extends State<Notifications> {
           Expanded(
             child: Container(
               color: Colors.white,
-              child: (alerts) ? Alerts() : Container(),
+              // child: (alerts) ? Alerts() : Container(),
+              child: RefreshIndicator(
+                onRefresh: Provider.of<Data>(context, listen: false).getNotifications,
+                child: (alerts) ? Alerts() : Container(),
+              ),
             ),
           )
         ],
@@ -169,37 +173,37 @@ class Alerts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return ListView(
-    //   padding: EdgeInsets.all(0.0),
-    //   children: [
-    //     SizedBox(height: 20.0,),
-    //     NotiInvoice(),
-    //     NotiPayment(),
-    //     NotiRecharge(),
-    //     NotiOther(),
-    //   ],
-    // );
 
-    if(Provider.of<Data>(context, listen: false).notifications.length < 1){
+    if(Provider.of<Data>(context, listen: true).notifications.length < 1){
       return Center(child: Text('No Notifications'));
     }
 
     return ListView.builder(
-      itemCount: Provider.of<Data>(context, listen: false).notifications.length,
+      itemCount: Provider.of<Data>(context, listen: true).notifications.length,
       itemBuilder: (context, index){
-        if(Provider.of<Data>(context, listen: false).notifications[index]['data']['type'] == 1){
+        //type => Recharge
+        if(Provider.of<Data>(context, listen: true).notifications[index]['data']['type'] == 1){
+          return(
+            NotiOther(index)
+          );
+        }
+        //type => invoice
+        else if(Provider.of<Data>(context, listen: true).notifications[index]['data']['type'] == 2){
+          return(
+            // NotiInvoice(index)
+              NotiPayment(index)
+          );
+        }
+        //type => Payment
+        else if(Provider.of<Data>(context, listen: true).notifications[index]['data']['type'] == 3){
+          return(
+            NotiOther(index)
+          );
+        }
+        //type => Low Balance
+        else if(Provider.of<Data>(context, listen: true).notifications[index]['data']['type'] == 4){
           return(
             NotiRecharge(index)
-          );
-        }
-        else if(Provider.of<Data>(context, listen: false).notifications[index]['data']['type'] == 2){
-          return(
-            NotiInvoice(index)
-          );
-        }
-        else if(Provider.of<Data>(context, listen: false).notifications[index]['data']['type'] == 3){
-          return(
-            NotiPayment(index)
           );
         }
         return(
@@ -221,13 +225,16 @@ class NotiInvoice extends StatelessWidget {
   Widget build(BuildContext context) {
     var timeElapsed = "0h";
     var timeDifference = 0;
-    if(Provider.of<Data>(context, listen: false).notifications[index]['data']['sendDate'] != null && Provider.of<Data>(context, listen: false).notifications[index]['data']['sendDate'] != ""){
-      timeDifference = DateTime.now().difference(DateTime.parse("${Provider.of<Data>(context, listen: false).notifications[index]['data']['sendDate']}")).inDays;
+    if(Provider.of<Data>(context, listen: false).notifications[index]['sendDate'] != null && Provider.of<Data>(context, listen: false).notifications[index]['sendDate'] != ""){
+      timeDifference = DateTime.now().difference(DateTime.parse("${Provider.of<Data>(context, listen: false).notifications[index]['sendDate']}")).inDays;
       timeElapsed = '${timeDifference}d';
 
       if(timeDifference < 1){
-        timeDifference = DateTime.now().difference(DateTime.parse("${Provider.of<Data>(context, listen: false).notifications[index]['data']['sendDate']}")).inHours + 5;
+        timeDifference = DateTime.now().difference(DateTime.parse("${Provider.of<Data>(context, listen: false).notifications[index]['sendDate']}")).inHours + 5;
         timeElapsed = '${timeDifference}h';
+        if(timeDifference > 24){
+          timeElapsed = '1d';
+        }
       }
     }
 
@@ -317,13 +324,16 @@ class NotiPayment extends StatelessWidget {
   Widget build(BuildContext context) {
     var timeElapsed = "0h";
     var timeDifference = 0;
-    if(Provider.of<Data>(context, listen: false).notifications[index]['data']['sendDate'] != null && Provider.of<Data>(context, listen: false).notifications[index]['data']['sendDate'] != ""){
-      timeDifference = DateTime.now().difference(DateTime.parse("${Provider.of<Data>(context, listen: false).notifications[index]['data']['sendDate']}")).inDays;
+    if(Provider.of<Data>(context, listen: false).notifications[index]['sendDate'] != null && Provider.of<Data>(context, listen: false).notifications[index]['sendDate'] != ""){
+      timeDifference = DateTime.now().difference(DateTime.parse("${Provider.of<Data>(context, listen: false).notifications[index]['sendDate']}")).inDays;
       timeElapsed = '${timeDifference}d';
 
       if(timeDifference < 1){
-        timeDifference = DateTime.now().difference(DateTime.parse("${Provider.of<Data>(context, listen: false).notifications[index]['data']['sendDate']}")).inHours + 5;
+        timeDifference = DateTime.now().difference(DateTime.parse("${Provider.of<Data>(context, listen: false).notifications[index]['sendDate']}")).inHours + 5;
         timeElapsed = '${timeDifference}h';
+        if(timeDifference > 24){
+          timeElapsed = '1d';
+        }
       }
     }
 
@@ -390,13 +400,16 @@ class NotiRecharge extends StatelessWidget {
   Widget build(BuildContext context) {
     var timeElapsed = "0h";
     var timeDifference = 0;
-    if(Provider.of<Data>(context, listen: false).notifications[index]['data']['sendDate'] != null && Provider.of<Data>(context, listen: false).notifications[index]['data']['sendDate'] != ""){
-      timeDifference = DateTime.now().difference(DateTime.parse("${Provider.of<Data>(context, listen: false).notifications[index]['data']['sendDate']}")).inDays;
+    if(Provider.of<Data>(context, listen: false).notifications[index]['sendDate'] != null && Provider.of<Data>(context, listen: false).notifications[index]['sendDate'] != ""){
+      timeDifference = DateTime.now().difference(DateTime.parse("${Provider.of<Data>(context, listen: false).notifications[index]['sendDate']}")).inDays;
       timeElapsed = '${timeDifference}d';
 
       if(timeDifference < 1){
-        timeDifference = DateTime.now().difference(DateTime.parse("${Provider.of<Data>(context, listen: false).notifications[index]['data']['sendDate']}")).inHours + 5;
+        timeDifference = DateTime.now().difference(DateTime.parse("${Provider.of<Data>(context, listen: false).notifications[index]['sendDate']}")).inHours + 5;
         timeElapsed = '${timeDifference}h';
+        if(timeDifference > 24){
+          timeElapsed = '1d';
+        }
       }
     }
 
@@ -463,13 +476,16 @@ class NotiOther extends StatelessWidget {
   Widget build(BuildContext context) {
     var timeElapsed = "0h";
     var timeDifference = 0;
-    if(Provider.of<Data>(context, listen: false).notifications[index]['data']['sendDate'] != null && Provider.of<Data>(context, listen: false).notifications[index]['data']['sendDate'] != ""){
-      timeDifference = DateTime.now().difference(DateTime.parse("${Provider.of<Data>(context, listen: false).notifications[index]['data']['sendDate']}")).inDays;
+    if(Provider.of<Data>(context, listen: false).notifications[index]['sendDate'] != null && Provider.of<Data>(context, listen: false).notifications[index]['sendDate'] != ""){
+      timeDifference = DateTime.now().difference(DateTime.parse("${Provider.of<Data>(context, listen: false).notifications[index]['sendDate']}")).inDays;
       timeElapsed = '${timeDifference}d';
 
       if(timeDifference < 1){
-        timeDifference = DateTime.now().difference(DateTime.parse("${Provider.of<Data>(context, listen: false).notifications[index]['data']['sendDate']}")).inHours + 5;
+        timeDifference = DateTime.now().difference(DateTime.parse("${Provider.of<Data>(context, listen: false).notifications[index]['sendDate']}")).inHours + 5;
         timeElapsed = '${timeDifference}h';
+        if(timeDifference > 24){
+          timeElapsed = '1d';
+        }
       }
     }
 
@@ -489,7 +505,7 @@ class NotiOther extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  AutoSizeText("${Provider.of<Data>(context, listen: false).notifications[index]['data']['description']}", maxLines: 2,),
+                  AutoSizeText("${Provider.of<Data>(context, listen: false).notifications[index]['data']['description']}", maxLines: 3, minFontSize: 2.0,),
                 ],
               ),
             ),

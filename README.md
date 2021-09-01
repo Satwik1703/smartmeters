@@ -4,6 +4,9 @@
 - Added Firebase Notifications
 - Added Notifications Screen
 - Jira Ticket => https://pert-automation.atlassian.net/browse/WHE-466
+- Made api changes aligned with the backend
+- Made changes in Notification screen in the mobile app
+- Jira Ticket => https://pert-automation.atlassian.net/browse/PERT-1
 
 ## V1.10.1
 - Replaced partial payment option with "other" payment option where users can enter any amount to pay
