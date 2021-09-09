@@ -1,4 +1,7 @@
 # smart_meter
+## V1.10.3 (production)
+- Updated the Dev url to the new server
+
 ## V1.10.2 (production)
 - Upgraded all the app packages
 - Added Firebase Notifications

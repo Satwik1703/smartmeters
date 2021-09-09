@@ -21,7 +21,8 @@ import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'components/utilities.dart';
 
 class Data extends ChangeNotifier {
-  var url = 'http://18.136.149.198:3074/api'; //Dev url
+  // var url = 'http://18.136.149.198:3074/api'; //Dev url
+  var url = 'http://35.168.249.104:3074/api'; //New Dev url
   // var url = 'https://pertsmartcommunity.com:3074/api';  //Production url
 
   var mobile_number = '';
@@ -125,9 +126,11 @@ class Data extends ChangeNotifier {
 
 
   Future<String> getOtp() async {
+    print('get otp start');
     http.Response response = await http.get(
       Uri.parse('$url/customers/getOtp?mobileno=$mobile_number&deviceId=12345&platformType=android')
     );
+    print('get otp end');
     var res = json.decode(response.body);
     if(res['success'] == true){
       otp = res['otp'];
@@ -1057,7 +1060,9 @@ class Data extends ChangeNotifier {
         'firebaseNotifications', 'Firebase Notifications', 'Firebase Notifications',
         importance: Importance.max,
         priority: Priority.high,
-        showWhen: false);
+        showWhen: false,
+        styleInformation: BigTextStyleInformation(''),
+    );
     const NotificationDetails platformChannelSpecifics =
         NotificationDetails(android: androidPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.show(

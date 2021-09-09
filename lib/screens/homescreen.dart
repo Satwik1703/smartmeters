@@ -230,14 +230,14 @@ class TestRow extends StatelessWidget {
                     Expanded(
                       flex: 3,
                       child: Container(
-                        margin: EdgeInsets.only(bottom: 50.0, right: 10.0),
+                        // margin: EdgeInsets.only(right: 10.0, bottom: 50.0),
                         child: Padding(
-                          padding: const EdgeInsets.only(left: 0.0, right: 18.0, top: 34.0, bottom: 34.0),
+                          padding: const EdgeInsets.only(left: 0.0, right: 18.0, top: 46.0, bottom: 34.0),
                           child: Container(
                             width: double.infinity,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
-                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Text("Home", style: TextStyle(fontSize: 10.0, color: Colors.white), textAlign: TextAlign.end,),
                                 AutoSizeText("${Provider.of<Data>(context).data['customerflatData'][flatIndex]['blockData']['name']} ${Provider.of<Data>(context).data['customerflatData'][flatIndex]['flatData']['name']}", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold), maxLines: 1, minFontSize: 2, textAlign: TextAlign.end,)

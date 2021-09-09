@@ -30,12 +30,12 @@ class TransPayment extends StatelessWidget {
     var a = data['transactionDate'].toString().substring(0, 10);
     DateTime dateParsed = new DateFormat("yyyy-MM-dd").parse(a);
     var time;
-    DateTime timeParsed = new DateFormat("hh:mm").parse(data['createdAt'].toString().substring(11, 16));
+    DateTime timeParsed = new DateFormat("hh:mm").parse(data['createdAt'].toString().substring(11, 16)).add(Duration(hours: 5, minutes: 30));
     if(timeParsed.hour <= 12){
-      time = "${data['createdAt'].toString().substring(11, 16)} am";
+      time = "${timeParsed.toString().substring(11, 16)} am";
     }
     else{
-      time = "${data['createdAt'].toString().substring(11, 16)} pm";
+      time = "${timeParsed.toString().substring(11, 16)} pm";
     }
 
     return RawMaterialButton(
@@ -315,12 +315,12 @@ class TransUtility extends StatelessWidget {
     var a = data['transactionDate'].toString().substring(0, 10);
     DateTime dateParsed = new DateFormat("yyyy-MM-dd").parse(a);
     var time;
-    DateTime timeParsed = new DateFormat("hh:mm").parse(data['createdAt'].toString().substring(11, 16));
+    DateTime timeParsed = new DateFormat("hh:mm").parse(data['createdAt'].toString().substring(11, 16)).add(Duration(hours: 5, minutes: 30));
     if(timeParsed.hour <= 12){
-      time = "${data['createdAt'].toString().substring(11, 16)} am";
+      time = "${timeParsed.toString().substring(11, 16)} am";
     }
     else{
-      time = "${data['createdAt'].toString().substring(11, 16)} pm";
+      time = "${timeParsed.toString().substring(11, 16)} pm";
     }
 
     return RawMaterialButton(

@@ -95,7 +95,7 @@ class PrepaidCard extends StatelessWidget {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text("Balance", style: TextStyle(fontSize: size_1),),
+                                    Text("Wallet Balance", style: TextStyle(fontSize: size_1),),
                                     RichText(
                                         text: TextSpan(
                                             style: TextStyle(fontSize: size_1, color: const Color(0xFF262626),),
@@ -228,7 +228,7 @@ class PostPaid extends StatelessWidget {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text("Due Amount", style: TextStyle(fontSize: size_1),),
+                                    Text("Invoice Amount", style: TextStyle(fontSize: size_1),),
                                     RichText(
                                         text: TextSpan(
                                             style: TextStyle(fontSize: size_1, color: const Color(0xFF262626),),
@@ -245,7 +245,7 @@ class PostPaid extends StatelessWidget {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text("Balance", style: TextStyle(fontSize: size_1),),
+                                    Text("Due Amount", style: TextStyle(fontSize: size_1),),
                                     RichText(
                                         text: TextSpan(
                                             style: TextStyle(fontSize: size_1, color: const Color(0xFF262626),),
@@ -352,7 +352,7 @@ class PrePost extends StatelessWidget {
                                       ]
                                   )
                               ),
-                              Text('Balance', style: TextStyle(fontSize: size_1),),
+                              Text('Wallet Balance', style: TextStyle(fontSize: size_1),),
                               RichText(
                                   text: TextSpan(
                                       style: TextStyle(fontSize: size_1, color: const Color(0xFF262626),),
@@ -382,7 +382,7 @@ class PrePost extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text('Postpaid', style: TextStyle(color: const Color(0xFFF77C25), fontSize: size_1),),
-                                    Text("Due Amount", style: TextStyle(fontSize: size_1),),
+                                    Text("Invoice Amount", style: TextStyle(fontSize: size_1),),
                                     RichText(
                                         text: TextSpan(
                                             style: TextStyle(fontSize: size_1, color: const Color(0xFF262626),),
@@ -399,7 +399,7 @@ class PrePost extends StatelessWidget {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text("Balance", style: TextStyle(fontSize: size_1),),
+                                    Text("Due Amount", style: TextStyle(fontSize: size_1),),
                                     RichText(
                                         text: TextSpan(
                                             style: TextStyle(fontSize: size_1, color: const Color(0xFF262626),),

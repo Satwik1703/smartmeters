@@ -112,7 +112,8 @@ class _UtilityState extends State<Utility> {
       DateTime dateParsed = new DateFormat("dd-MM-yyyy h:mm:ss").parse(a);
       var c = (dateParsed.minute.toString().length < 2) ? '0${dateParsed.minute}' : dateParsed.minute;
       var d = (dateParsed.hour.toString() == '0' || dateParsed.hour.toString() == '00') ? '12' : dateParsed.hour;
-      updTime = '${(dateParsed.day).toString()} ${Provider.of<Data>(context, listen: false).getMonthName((dateParsed.month).toString())}, $d:$c$b';
+      var m = Provider.of<Data>(context, listen: false).getMonthName((dateParsed.month).toString()).toString().substring(0, 3);
+      updTime = '${(dateParsed.day).toString()} $m, $d:$c$b';
     }
     if(updTime.toString().length < 2){
       updTime = 'N/A';

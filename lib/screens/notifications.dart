@@ -353,13 +353,13 @@ class NotiPayment extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  AutoSizeText("${Provider.of<Data>(context, listen: false).notifications[index]['data']['description']}", maxLines: 2,),
+                  AutoSizeText("${Provider.of<Data>(context, listen: false).notifications[index]['data']['description']}", maxLines: 3, maxFontSize: 11.0, minFontSize: 5.0,),
                   SizedBox(height: 15,),
                   GestureDetector(
                     onTap: (){
                       Provider.of<Data>(context, listen: false).paymentGateway(context, true);
                     },
-                    child: AutoSizeText('Pay Now', maxLines: 1, minFontSize: 2, style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFF77C25)),),
+                    child: AutoSizeText('Pay Now', maxLines: 1, minFontSize: 2, maxFontSize: 12, style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFF77C25)),),
                   )
                 ],
               ),
@@ -429,13 +429,13 @@ class NotiRecharge extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  AutoSizeText("${Provider.of<Data>(context, listen: false).notifications[index]['data']['description']}", maxLines: 2,),
+                  AutoSizeText("${Provider.of<Data>(context, listen: false).notifications[index]['data']['description']}", maxLines: 2, minFontSize: 5.0, maxFontSize: 11.0,),
                   SizedBox(height: 15,),
                   GestureDetector(
                     onTap: (){
                       Provider.of<Data>(context, listen: false).paymentGateway(context, false);
                     },
-                    child: AutoSizeText('Recharge', maxLines: 1, minFontSize: 2, style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFF77C25)),),
+                    child: AutoSizeText('Recharge', maxLines: 1, minFontSize: 2, maxFontSize: 12, style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFF77C25)),),
                   )
                 ],
               ),
@@ -481,7 +481,7 @@ class NotiOther extends StatelessWidget {
       timeElapsed = '${timeDifference}d';
 
       if(timeDifference < 1){
-        timeDifference = DateTime.now().difference(DateTime.parse("${Provider.of<Data>(context, listen: false).notifications[index]['sendDate']}")).inHours + 5;
+        timeDifference = DateTime.now().difference(DateTime.parse("${Provider.of<Data>(context, listen: false).notifications[index]['sendDate']}")).inHours;
         timeElapsed = '${timeDifference}h';
         if(timeDifference > 24){
           timeElapsed = '1d';
@@ -505,7 +505,7 @@ class NotiOther extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  AutoSizeText("${Provider.of<Data>(context, listen: false).notifications[index]['data']['description']}", maxLines: 3, minFontSize: 2.0,),
+                  AutoSizeText("${Provider.of<Data>(context, listen: false).notifications[index]['data']['description']}", maxLines: 4, minFontSize: 2.0, maxFontSize: 11.0,),
                 ],
               ),
             ),
