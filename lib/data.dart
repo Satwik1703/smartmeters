@@ -10,9 +10,9 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
+// import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:path_provider/path_provider.dart';
+// import 'package:path_provider/path_provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -126,11 +126,9 @@ class Data extends ChangeNotifier {
 
 
   Future<String> getOtp() async {
-    print('get otp start');
     http.Response response = await http.get(
       Uri.parse('$url/customers/getOtp?mobileno=$mobile_number&deviceId=12345&platformType=android')
     );
-    print('get otp end');
     var res = json.decode(response.body);
     if(res['success'] == true){
       otp = res['otp'];
@@ -170,16 +168,16 @@ class Data extends ChangeNotifier {
   }
   
   Future<void> getDashboardData() async{
-    try{
-      WidgetsFlutterBinding.ensureInitialized();
-      await FlutterDownloader.initialize(
-          debug: true // optional: set false to disable printing logs to console
-      );
-    }
-    catch (e){
-      print('Initialize warning');
-      print('data.dart');
-    }
+    // try{
+    //   WidgetsFlutterBinding.ensureInitialized();
+    //   await FlutterDownloader.initialize(
+    //       debug: true // optional: set false to disable printing logs to console
+    //   );
+    // }
+    // catch (e){
+    //   print('Initialize warning');
+    //   print('data.dart');
+    // }
 
     http.Response response = await http.post(
         Uri.parse('$url/meterDataSummaries/getCustomerData?token=${data['token']}'),
@@ -519,32 +517,32 @@ class Data extends ChangeNotifier {
       gravity: ToastGravity.BOTTOM,
     );
 
-    try{
-      FlutterDownloader.registerCallback(downloadCallback);
-
-      String dir = (await getExternalStorageDirectory()).path;
-      final taskId = await FlutterDownloader.enqueue(
-        url: '$url/containers/invoice/download/$invoiceNo.pdf',
-        savedDir: '$dir',
-        showNotification: true, // show download progress in status bar (for Android)
-        openFileFromNotification: true, // click on notification to open downloaded file (for Android)
-      );
-
-      await Future.delayed(const Duration(seconds: 3), (){});
-      await FlutterDownloader.open(taskId: taskId);
-      return ("File saved at $dir");
-
-    }
-    catch (err){
-      print(err);
-      return ('Download Failed');
-    }
+    // try{
+    //   FlutterDownloader.registerCallback(downloadCallback);
+    //
+    //   String dir = (await getExternalStorageDirectory()).path;
+    //   final taskId = await FlutterDownloader.enqueue(
+    //     url: '$url/containers/invoice/download/$invoiceNo.pdf',
+    //     savedDir: '$dir',
+    //     showNotification: true, // show download progress in status bar (for Android)
+    //     openFileFromNotification: true, // click on notification to open downloaded file (for Android)
+    //   );
+    //
+    //   await Future.delayed(const Duration(seconds: 3), (){});
+    //   await FlutterDownloader.open(taskId: taskId);
+    //   return ("File saved at $dir");
+    //
+    // }
+    // catch (err){
+    //   print(err);
+    //   return ('Download Failed');
+    // }
   }
 
-  static void downloadCallback(String id, DownloadTaskStatus status, int progress) {
-    final SendPort send = IsolateNameServer.lookupPortByName('downloader_send_port');
-    send.send([id, status, progress]);
-  }
+  // static void downloadCallback(String id, DownloadTaskStatus status, int progress) {
+  //   final SendPort send = IsolateNameServer.lookupPortByName('downloader_send_port');
+  //   send.send([id, status, progress]);
+  // }
 
   Future<void> logout() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
