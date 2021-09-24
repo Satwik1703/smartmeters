@@ -68,10 +68,15 @@ class _LoginState extends State<Login> {
   var user = "Get OTP";
   var verifyOtp = "Verify";
   var otp = '';
+  var verifying = false;
 
   validateOtp() async {
+    if(verifying){
+      return;
+    }
     setState(() {
       verifyOtp = "Verifying...";
+      verifying = true;
     });
     //Firebase Auth---
     try {
@@ -93,6 +98,7 @@ class _LoginState extends State<Login> {
       print("Failed to sign in: " + e.toString());
       setState(() {
         verifyOtp = "Wrong OTP";
+        verifying = false;
       });
       return;
     }
@@ -102,11 +108,15 @@ class _LoginState extends State<Login> {
     if(res == "Error"){
       setState(() {
         verifyOtp = "Wrong OTP";
+        verifying = false;
       });
       return;
     }
     if(res == "Success"){
       await  Provider.of<Data>(context, listen: false).getDashboardData();
+      setState(() {
+        verifying = false;
+      });
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => HomeScreen()),
@@ -232,15 +242,17 @@ class _LoginState extends State<Login> {
             setState(() {
               firebaseOtp = value;
               verifyOtp = "Verify";
+              verifying = false;
             });
           },
-          onTap: (){
-            // txt.value = TextEditingValue(
-            //   text: otp,
-            //   selection: TextSelection.fromPosition(
-            //     TextPosition(offset: otp.length),
-            //   ),
-            // );
+          onTap: () async{
+            ClipboardData data = await Clipboard.getData(Clipboard.kTextPlain);
+            txt.value = TextEditingValue(
+              text: data.text,
+              selection: TextSelection.fromPosition(
+                TextPosition(offset: data.text.length),
+              ),
+            );
           },
           beforeTextPaste: (text) {
             return false;

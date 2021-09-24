@@ -1,4 +1,8 @@
 # smart_meter
+## V1.10.4 (production)
+- Not allowing users to double click on Verifying OTP screen
+- Added Click to past OTP feature
+
 ## V1.10.3 (production)
 - Updated the Dev url to the new server
 

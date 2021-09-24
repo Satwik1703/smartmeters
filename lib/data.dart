@@ -22,8 +22,8 @@ import 'components/utilities.dart';
 
 class Data extends ChangeNotifier {
   // var url = 'http://18.136.149.198:3074/api'; //Dev url
-  var url = 'http://35.168.249.104:3074/api'; //New Dev url
-  // var url = 'https://pertsmartcommunity.com:3074/api';  //Production url
+  // var url = 'http://35.168.249.104:3074/api'; //New Dev url
+  var url = 'https://pertsmartcommunity.com:3074/api';  //Production url
 
   var mobile_number = '';
   var otp = '';
@@ -126,11 +126,9 @@ class Data extends ChangeNotifier {
 
 
   Future<String> getOtp() async {
-    print('get otp start');
     http.Response response = await http.get(
       Uri.parse('$url/customers/getOtp?mobileno=$mobile_number&deviceId=12345&platformType=android')
     );
-    print('get otp end');
     var res = json.decode(response.body);
     if(res['success'] == true){
       otp = res['otp'];
@@ -152,7 +150,6 @@ class Data extends ChangeNotifier {
         "otp": otp,
       })
     );
-
     var res = json.decode(response.body);
     data = res;
     notifyListeners();
@@ -180,7 +177,6 @@ class Data extends ChangeNotifier {
       print('Initialize warning');
       print('data.dart');
     }
-
     http.Response response = await http.post(
         Uri.parse('$url/meterDataSummaries/getCustomerData?token=${data['token']}'),
         headers: <String, String>{
@@ -194,7 +190,6 @@ class Data extends ChangeNotifier {
           "customerId": data['customerflatData'][flatIndex]['customerId'],
         })
     );
-
     var res = json.decode(response.body);
     dashboardData = res;
     dashboardData['postpaiddata']['remainingAmount'] = (dashboardData['postpaiddata']['remainingAmount'].toString().length > 8) ? dashboardData['postpaiddata']['remainingAmount'].toString().substring(0, 8) : dashboardData['postpaiddata']['remainingAmount'];
