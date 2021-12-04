@@ -1,4 +1,7 @@
 # smart_meter
+## V1.10.5
+- Added login with Email
+
 ## V1.10.4 (production)
 - Not allowing users to double click on Verifying OTP screen
 - Added Click to past OTP feature

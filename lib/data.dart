@@ -26,6 +26,7 @@ class Data extends ChangeNotifier {
   var url = 'https://pertsmartcommunity.com:3074/api';  //Production url
 
   var mobile_number = '';
+  var loginEmail = '';
   var otp = '';
   var index = 0;
   var flatIndex = 0;
@@ -54,6 +55,11 @@ class Data extends ChangeNotifier {
 
   void changeMobileNumber(String number) {
     mobile_number = number;
+    notifyListeners();
+  }
+
+  void changeLoginEmail(String email) {
+    loginEmail = email;
     notifyListeners();
   }
 
@@ -137,6 +143,35 @@ class Data extends ChangeNotifier {
     else {
       return "Error";
     }
+  }
+
+  Future<String> validateEmail(String password) async {
+    http.Response response = await http.post(
+      Uri.parse('$url/customers/LoginWithEmail'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({
+        "email": loginEmail.toLowerCase(),
+        "password": password,
+        "deviceId": '12345',
+        "platformType": 'android',
+      })
+    );
+    var res = json.decode(response.body);
+    data = res;
+    notifyListeners();
+
+    if(res['error'] != null){
+      return "Error";
+    }
+    if(res['firstName'] != null){
+      var prefs = await SharedPreferences.getInstance();
+      prefs.setString('data', json.encode(data));
+
+      return "Success";
+    }
+    return "Error";
   }
 
   Future<String> validateOtp() async {

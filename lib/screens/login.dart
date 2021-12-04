@@ -5,6 +5,7 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_meter/data.dart';
 import 'package:smart_meter/screens/homescreen.dart';
+import 'package:smart_meter/screens/emailLogin.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -370,7 +371,32 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                 ),
-              )
+              ),
+              SizedBox(height: 20.0,),
+              Container(
+                height: MediaQuery.of(context).size.width * 0.15,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(Radius.circular(9.0)),
+                  border: Border.all(color: Color(0xFFF77C25)),
+                ),
+                child: RawMaterialButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => EmailLogin()),
+                    );
+                  },
+                  child: Text(
+                    "SignIn with Email",
+                    style: TextStyle(
+                      color: const Color(0xFFF77C25),
+                      fontSize: MediaQuery.of(context).size.width * 0.05,
+                    ),
+                  ),
+                ),
+            )
             ],
           );
   }
